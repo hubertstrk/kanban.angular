@@ -12,7 +12,7 @@ This project is a desktop application built with Angular 17, Tauri 2, and Tailwi
 
 ### Angular Only
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:5201/`. The application will automatically reload if you change any of the source files.
 
 ### Tauri + Angular
 
