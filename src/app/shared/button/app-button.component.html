@@ -1,0 +1,5 @@
+<button (click)="onClick($event)" [disabled]="disabled" [ngClass]="computedClasses"
+        class="flex items-center justify-center relative">
+  <div *ngIf="icon" [innerHtml]="icon"></div>
+  <ng-content></ng-content>
+</button>
