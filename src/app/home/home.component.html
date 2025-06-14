@@ -1,0 +1,42 @@
+<div class="w-full h-screen flex flex-col">
+  <div class="flex items-center justify-between bg-gray-800 text-white p-2 mb-4" data-tauri-drag-region>
+    <h1 class="text-2xl font-bold">{{ title }}</h1>
+    <div class="flex space-x-2">
+      <button (click)="minimizeWindow()" class="px-2 py-1 hover:bg-gray-700 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      <button (click)="maximizeWindow()" class="px-2 py-1 hover:bg-gray-700 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4 4a1 1 0 011-1h10a1 1 0 011 1v10a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm1 0v10h10V4H5z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      <button (click)="closeWindow()" class="px-2 py-1 hover:bg-red-600 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="grid grid-cols-3 gap-0 flex-grow w-full">
+    <div class="bg-gray-100 py-4 rounded-lg flex flex-col">
+      <h2 class="text-xl font-semibold mb-2 pl-4">Todo</h2>
+      <div class="flex-grow px-4">
+        <!-- Todo items will go here -->
+      </div>
+    </div>
+    <div class="bg-gray-100 py-4 px-4 rounded-lg flex flex-col">
+      <h2 class="text-xl font-semibold mb-2">Progress</h2>
+      <div class="flex-grow px-4">
+        <!-- In progress items will go here -->
+      </div>
+    </div>
+    <div class="bg-gray-100 py-4 rounded-lg flex flex-col">
+      <h2 class="text-xl font-semibold mb-2 pl-4">Done</h2>
+      <div class="flex-grow px-4">
+        <!-- Completed items will go here -->
+      </div>
+    </div>
+  </div>
+</div>
