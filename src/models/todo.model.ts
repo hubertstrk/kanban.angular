@@ -1,4 +1,4 @@
-export enum TodoStatus {
+export enum TaskStatus {
   TODO = 'todo',
   PROGRESS = 'progress',
   DONE = 'done',
@@ -12,5 +12,12 @@ export interface Todo {
   tags: string[];
   createdAt: string;
   dueAt: string;
-  status: TodoStatus;
+  status: TaskStatus;
 }
+
+export const TaskStatusMapping: Record<string, TaskStatus> = {
+  ['progress-list']: TaskStatus.PROGRESS,
+  ['todo-list']: TaskStatus.TODO,
+  ['done-list']: TaskStatus.DONE,
+  ['deleted-list']: TaskStatus.DELETED,
+};

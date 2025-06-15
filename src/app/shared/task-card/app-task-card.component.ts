@@ -21,4 +21,8 @@ export class TaskCardComponent {
       minute: '2-digit',
     });
   }
+
+  getTitleClass(): string {
+    return `font-medium ${this.task.status === 'done' ? 'line-through text-zinc-500 dark:text-neutral-100' : ''}`;
+  }
 }

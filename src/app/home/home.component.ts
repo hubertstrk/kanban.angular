@@ -22,6 +22,7 @@ import {AppState} from "@store/index";
 
 import {sortBy} from 'lodash-es';
 import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
+import {TaskStatusMapping} from "@models/todo.model";
 
 const appWindow = getCurrentWebviewWindow();
 
@@ -39,6 +40,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   deleted: Task[] = [];
   icons: { [key: string]: SafeHtml } = {};
   settings: Settings | null = null;
+  statusMapping = TaskStatusMapping;
+
   // Modal control
   isModalOpen = false;
   taskName = '';
@@ -161,13 +164,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<Task[]>) {
-    // do nothing if the item is dropped in the same container
     if (event.previousContainer.id === event.container.id) return;
 
     const task = event.previousContainer.data[event.previousIndex];
 
-    // Update the task status based on the target container
-    const newStatus = this.getStatusFromContainerId(event.container.id);
+    const newStatus = this.statusMapping[event.container.id]
+    
     const updatedTask = {...task, status: newStatus} as Task;
 
     this.store.dispatch(updateTask({task: updatedTask}));
@@ -177,18 +179,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.settings?.dark
       ? document.documentElement.classList.add('dark')
       : document.documentElement.classList.remove('dark');
-  }
-
-  private getStatusFromContainerId(containerId: string): string {
-    switch (containerId) {
-      case 'todo-list':
-        return 'todo';
-      case 'progress-list':
-        return 'progress';
-      case 'done-list':
-        return 'done';
-      default:
-        return 'todo';
-    }
   }
 }
