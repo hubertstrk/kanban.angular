@@ -1,11 +1,13 @@
-<div class="w-full h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-  <div class="flex items-center justify-between bg-gray-800 dark:bg-gray-900 text-white p-2 mb-4" data-tauri-drag-region>
-    <h1 class="text-2xl font-bold">Tasks</h1>
+<div class="w-full h-screen flex flex-col bg-white dark:bg-zinc-800 text-black dark:text-neutral-100">
+  <div class="flex items-center justify-between px-5 py-3" data-tauri-drag-region>
+    <h1 class="uppercase text-2xl">Tasks</h1>
     <div class="flex space-x-2">
       <app-button
         (clicked)="toggleDarkMode()"
         [icon]="settings?.dark ? icons['fluent--weather-sunny-24-regular'] : icons['fluent--dark-theme-24-filled']">
       </app-button>
+    </div>
+    <div class="flex space-x-2">
       <app-button
         (clicked)="minimizeWindow()"
         [icon]="icons['material-symbols-light--minimize-rounded']">
@@ -20,21 +22,22 @@
       </app-button>
     </div>
   </div>
-  <div class="grid grid-cols-3 gap-0 flex-grow w-full">
-    <div class="bg-gray-100 dark:bg-gray-800 py-4 rounded-lg flex flex-col">
-      <h2 class="text-xl font-semibold mb-2 pl-4 text-gray-900 dark:text-white">Task</h2>
+
+  <div class="grid grid-cols-3 gap-4 flex-grow w-full px-4">
+    <div class="bg-gray-100 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
+      <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Todo</h2>
       <div class="flex-grow px-4">
         <!-- Task items will go here -->
       </div>
     </div>
-    <div class="bg-gray-100 dark:bg-gray-800 py-4 px-4 rounded-lg flex flex-col">
-      <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Progress</h2>
+    <div class="bg-gray-100 dark:bg-zinc-700 py-4 px-4 rounded-lg flex flex-col">
+      <h2 class="uppercase mb-2 text-black dark:text-neutral-100">Progress</h2>
       <div class="flex-grow px-4">
         <!-- In progress items will go here -->
       </div>
     </div>
-    <div class="bg-gray-100 dark:bg-gray-800 py-4 rounded-lg flex flex-col">
-      <h2 class="text-xl font-semibold mb-2 pl-4 text-gray-900 dark:text-white">Done</h2>
+    <div class="bg-gray-100 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
+      <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Done</h2>
       <div class="flex-grow px-4">
         <!-- Completed items will go here -->
       </div>
