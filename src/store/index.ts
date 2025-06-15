@@ -1,20 +1,20 @@
 import { ActionReducerMap } from '@ngrx/store';
 import * as fromSettings from './settings/settings.reducer';
-import * as fromTodos from './todos/todos.reducer';
+import * as fromTasks from './tasks/tasks.reducer';
 import { SettingsEffects } from './settings/settings.effects';
-import { TodosEffects } from './todos/todos.effects';
+import { TasksEffects } from './tasks/tasks.effects';
 
 export interface AppState {
   settings: fromSettings.SettingsState;
-  todos: fromTodos.TodosState;
+  tasks: fromTasks.TasksState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
   settings: fromSettings.settingsReducer,
-  todos: fromTodos.todosReducer
+  tasks: fromTasks.tasksReducer
 };
 
 export const effects = [
   SettingsEffects,
-  TodosEffects
+  TasksEffects
 ];

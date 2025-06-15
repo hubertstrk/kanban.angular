@@ -3,4 +3,4 @@
  */
 export const APP_DIR = 'kanban-angular';
 export const SETTINGS_DIR = 'settings';
-export const TODOS_DIR = 'todos';
+export const TASKS_DIR = 'tasks';

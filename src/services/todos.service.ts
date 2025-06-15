@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BaseDirectory, exists, readDir, readTextFile, writeTextFile} from '@tauri-apps/plugin-fs';
 import {Todo} from '@models/todo.model';
-import {APP_DIR, TODOS_DIR} from '@models/app-constants.model';
+import {APP_DIR, TASKS_DIR} from '@models/app-constants.model';
 import {from, Observable} from 'rxjs';
 import {join} from '@tauri-apps/api/path';
 
@@ -30,7 +30,7 @@ export class TodosService {
    */
   private async readAllTodosAsync(): Promise<Todo[]> {
     try {
-      const todosDirPath = await join(APP_DIR, TODOS_DIR);
+      const todosDirPath = await join(APP_DIR, TASKS_DIR);
 
       const dirExists = await exists(todosDirPath, {baseDir: BaseDirectory.AppData});
       if (!dirExists) {
@@ -78,7 +78,7 @@ export class TodosService {
    */
   private async saveTodoAsync(todo: Todo): Promise<Todo> {
     try {
-      const todosDirPath = await join(APP_DIR, TODOS_DIR);
+      const todosDirPath = await join(APP_DIR, TASKS_DIR);
       const todoFilePath = await join(todosDirPath, `${todo.id}.json`);
 
       await writeTextFile(

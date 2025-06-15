@@ -1,6 +1,6 @@
 <div class="w-full h-screen flex flex-col">
   <div class="flex items-center justify-between bg-gray-800 text-white p-2 mb-4" data-tauri-drag-region>
-    <h1 class="text-2xl font-bold">Todos</h1>
+    <h1 class="text-2xl font-bold">Tasks</h1>
     <div class="flex space-x-2">
       <app-button
         (clicked)="minimizeWindow()"
@@ -18,9 +18,9 @@
   </div>
   <div class="grid grid-cols-3 gap-0 flex-grow w-full">
     <div class="bg-gray-100 py-4 rounded-lg flex flex-col">
-      <h2 class="text-xl font-semibold mb-2 pl-4">Todo</h2>
+      <h2 class="text-xl font-semibold mb-2 pl-4">Task</h2>
       <div class="flex-grow px-4">
-        <!-- Todo items will go here -->
+        <!-- Task items will go here -->
       </div>
     </div>
     <div class="bg-gray-100 py-4 px-4 rounded-lg flex flex-col">

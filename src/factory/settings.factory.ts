@@ -9,7 +9,7 @@ import {join} from '@tauri-apps/api/path';
 
 
 import {DefaultSettings, SettingsFileName} from '@models/settings.model';
-import {APP_DIR, SETTINGS_DIR, TODOS_DIR} from '@models/app-constants.model';
+import {APP_DIR, SETTINGS_DIR, TASKS_DIR} from '@models/app-constants.model';
 
 export async function initSettingsFactory() {
   // ensure app directory
@@ -34,15 +34,15 @@ export async function initSettingsFactory() {
     console.info('Settings directory created');
   }
 
-  // ensure todos directory
-  const todosDirPath = await join(APP_DIR, TODOS_DIR);
-  const todosDirExists = await exists(todosDirPath, {
+  // ensure tasks directory
+  const tasksDirPath = await join(APP_DIR, TASKS_DIR);
+  const tasksDirExists = await exists(tasksDirPath, {
     baseDir: BaseDirectory.AppData,
   });
 
-  if (!todosDirExists) {
-    await mkdir(todosDirPath, {baseDir: BaseDirectory.AppData, recursive: true});
-    console.info('Todos directory created');
+  if (!tasksDirExists) {
+    await mkdir(tasksDirPath, {baseDir: BaseDirectory.AppData, recursive: true});
+    console.info('Tasks directory created');
   }
 
   // ensure user settings file
