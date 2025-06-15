@@ -2,16 +2,16 @@ import {Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
-  selector: 'app-hr',
+  selector: 'app-devider',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './app-hr.component.html',
+  templateUrl: './app-devider.component.html',
 })
-export class HrComponent {
+export class AppDeviderComponent {
   @Input() variant: 'light' | 'dark' | 'auto' = 'auto';
   @Input() margin: 'none' | 'sm' | 'md' | 'lg' = 'md';
 
-  get hrClasses(): string {
+  get deviderClasses(): string {
     const marginClasses = {
       none: 'my-0',
       sm: 'my-1',

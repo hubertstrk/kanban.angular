@@ -3,12 +3,12 @@ import {CommonModule} from '@angular/common';
 import {IconService} from '@services/icons.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {ButtonComponent} from '../button/app-button.component';
-import {HrComponent} from '../hr/app-hr.component';
+import {AppDeviderComponent} from '../devider/app-devider.component';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, HrComponent],
+  imports: [CommonModule, ButtonComponent, AppDeviderComponent],
   templateUrl: './app-modal.component.html',
   providers: [IconService],
 })
