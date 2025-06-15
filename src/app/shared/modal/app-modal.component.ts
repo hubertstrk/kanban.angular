@@ -3,17 +3,17 @@ import {CommonModule} from '@angular/common';
 import {IconService} from '@services/icons.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {ButtonComponent} from '../button/app-button.component';
+import {HrComponent} from '../hr/app-hr.component';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, HrComponent],
   templateUrl: './app-modal.component.html',
   providers: [IconService],
 })
 export class ModalComponent implements OnInit {
   @Input() isOpen = false;
-  @Input() width = 'max-w-2xl';
   @Input() closeOnBackdropClick = true;
 
   @Output() closed = new EventEmitter<void>();
@@ -59,7 +59,7 @@ export class ModalComponent implements OnInit {
   get contentClasses(): string {
     return `
       bg-white dark:bg-zinc-800 text-black dark:text-neutral-100 rounded-lg shadow-xl transform transition-all
-      ${this.width} w-full mx-auto
+      w-4/5 md:w-1/2 mx-auto
       ${this.isOpen ? 'translate-y-0' : '-translate-y-4'}
     `;
   }

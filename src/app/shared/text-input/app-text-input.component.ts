@@ -27,7 +27,6 @@ export class TextInputComponent implements ControlValueAccessor {
   value: string = '';
   isFocused = false;
 
-  // ControlValueAccessor implementation
   private onChange: (value: string) => void = () => {
   };
   private onTouched: () => void = () => {
@@ -49,9 +48,8 @@ export class TextInputComponent implements ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.value = target.value;
+  onInputChange(event: string): void {
+    this.value = event;
     this.onChange(this.value);
   }
 
@@ -64,9 +62,6 @@ export class TextInputComponent implements ControlValueAccessor {
     this.isFocused = true;
   }
 
-  /**
-   * Get the computed classes for the input container
-   */
   get containerClasses(): string {
     return `
       relative mb-4
@@ -74,39 +69,29 @@ export class TextInputComponent implements ControlValueAccessor {
     `;
   }
 
-  /**
-   * Get the computed classes for the input element
-   */
   get inputClasses(): string {
     return `
       block w-full px-3 py-2 border rounded-md shadow-sm
-      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+      focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500
       ${this.errorMessage ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
-      ${this.isFocused ? 'border-blue-500' : ''}
-      bg-white dark:bg-gray-700
-      text-gray-900 dark:text-gray-100
-      placeholder-gray-400 dark:placeholder-gray-500
+      ${this.isFocused ? 'border-sky-500' : ''}
+      bg-white dark:bg-zinc-700
+      text-black dark:text-neutral-100
+      placeholder-gray-300 dark:placeholder-gray-500
     `;
   }
 
-  /**
-   * Get the computed classes for the label
-   */
   get labelClasses(): string {
     return `
-      block mb-1 text-sm font-medium
-      text-gray-700 dark:text-gray-300
+      block mb-1 text-sm text-zinc-700 dark:text-zinc-300
       ${this.required ? 'required' : ''}
     `;
   }
 
-  /**
-   * Get the computed classes for the helper text
-   */
   get helperTextClasses(): string {
     return `
       mt-1 text-sm
-      ${this.errorMessage ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}
+      ${this.errorMessage ? 'text-red-600 dark:text-red-400' : 'text-sky-500 dark:text-sky-400'}
     `;
   }
 }

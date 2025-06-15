@@ -6,20 +6,24 @@
   <div [ngClass]="contentClasses" (click)="stopPropagation($event)" class="relative">
 
     <!-- title -->
-    <div class="px-4 py-3 border-b flex justify-between items-center">
+    <div class="px-4 py-3 flex justify-between items-center">
       <div class="font-medium">
         <ng-content select="[modalTitle]"></ng-content>
       </div>
       <app-button (clicked)="close()" [icon]="icons['material-symbols-light--close-rounded']"></app-button>
     </div>
 
+    <app-hr variant="auto" margin="none"></app-hr>
+
     <!-- body -->
     <div class="px-4 py-4">
       <ng-content></ng-content>
     </div>
 
+    <app-hr variant="auto" margin="none"></app-hr>
+
     <!-- footer -->
-    <div class="px-4 py-3 border-t flex justify-end">
+    <div class="px-4 py-3 flex justify-end">
       <ng-content select="[modalFooter]"></ng-content>
     </div>
   </div>

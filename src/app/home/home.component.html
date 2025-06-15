@@ -62,7 +62,7 @@
       <app-text-input
         label="Description"
         placeholder="Enter task"
-        [(ngModel)]="taskDescription">
+        [(ngModel)]="taskContent">
       </app-text-input>
     </div>
 
@@ -70,7 +70,7 @@
       <app-button variant="transparent" [rounded]="false" (clicked)="closeModal()">
         Cancel
       </app-button>
-      <app-button variant="primary" [rounded]="false" (clicked)="saveTask()" [disabled]="!taskName">
+      <app-button variant="primary" [rounded]="false" (clicked)="saveTask()">
         Save
       </app-button>
     </div>

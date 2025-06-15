@@ -7,10 +7,15 @@ import {IconService} from "@services/icons.service";
 import {SafeHtml} from '@angular/platform-browser';
 import {SettingsService} from '@services/settings.service';
 import {Settings} from '@models/settings.model';
+import {v4} from 'uuid';
 
 import {ButtonComponent} from '../shared/button/app-button.component';
 import {ModalComponent} from '../shared/modal/app-modal.component';
 import {TextInputComponent} from '../shared/text-input/app-text-input.component';
+
+import {Store} from '@ngrx/store';
+import {createTask} from '@store/tasks/tasks.actions';
+import {Task, TaskStatus} from "@models/task.model";
 
 const appWindow = getCurrentWebviewWindow();
 
@@ -30,11 +35,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Modal control
   isModalOpen = false;
   taskName = '';
-  taskDescription = '';
+  taskContent = '';
 
   constructor(
     private iconService: IconService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private store: Store
   ) {
   }
 
@@ -77,12 +83,27 @@ export class HomeComponent implements OnInit, OnDestroy {
   createNewTask(): void {
     this.isModalOpen = true;
     this.taskName = '';
-    this.taskDescription = '';
+    this.taskContent = '';
   }
 
   saveTask(): void {
-    console.log('Task saved:', {name: this.taskName, description: this.taskDescription});
-    this.closeModal();
+    try {
+      this.store.dispatch(createTask({
+        task: {
+          id: v4(),
+          title: this.taskName,
+          content: this.taskContent,
+          status: TaskStatus.TODO,
+          createdAt: new Date().toISOString(),
+          tags: [],
+          dueAt: null,
+        }
+      }))
+
+      this.closeModal();
+    } catch (error) {
+      console.error('Error saving task:', error);
+    }
   }
 
   closeModal(): void {
@@ -101,14 +122,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     void appWindow.close();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private applyTheme(): void {
     this.settings?.dark
       ? document.documentElement.classList.add('dark')
       : document.documentElement.classList.remove('dark');
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

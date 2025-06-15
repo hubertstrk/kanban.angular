@@ -1,5 +1,5 @@
-import { createReducer, on } from '@ngrx/store';
-import { Task } from '@models/task.model';
+import {createReducer, on} from '@ngrx/store';
+import {Task} from '@models/task.model';
 import * as TasksActions from './tasks.actions';
 
 export interface TasksState {
@@ -23,27 +23,28 @@ export const tasksReducer = createReducer(
     loading: true,
     error: null
   })),
-  on(TasksActions.loadTasksSuccess, (state, { tasks }) => ({
+  on(TasksActions.loadTasksSuccess, (state, {tasks}) => ({
     ...state,
     tasks,
     loading: false
   })),
-  on(TasksActions.loadTasksFailure, (state, { error }) => ({
+  on(TasksActions.loadTasksFailure, (state, {error}) => ({
     ...state,
     error,
     loading: false
   })),
-  on(TasksActions.createTask, state => ({
+  on(TasksActions.createTask, (state, {task}) => ({
     ...state,
+    tasks: [...state.tasks, task],
     loading: true,
     error: null
   })),
-  on(TasksActions.createTaskSuccess, (state, { task }) => ({
+  on(TasksActions.createTaskSuccess, (state, {task}) => ({
     ...state,
     tasks: [...state.tasks, task],
     loading: false
   })),
-  on(TasksActions.createTaskFailure, (state, { error }) => ({
+  on(TasksActions.createTaskFailure, (state, {error}) => ({
     ...state,
     error,
     loading: false
@@ -53,17 +54,17 @@ export const tasksReducer = createReducer(
     loading: true,
     error: null
   })),
-  on(TasksActions.updateTaskSuccess, (state, { task }) => ({
+  on(TasksActions.updateTaskSuccess, (state, {task}) => ({
     ...state,
     tasks: state.tasks.map(t => t.id === task.id ? task : t),
     loading: false
   })),
-  on(TasksActions.updateTaskFailure, (state, { error }) => ({
+  on(TasksActions.updateTaskFailure, (state, {error}) => ({
     ...state,
     error,
     loading: false
   })),
-  on(TasksActions.selectTask, (state, { id }) => ({
+  on(TasksActions.selectTask, (state, {id}) => ({
     ...state,
     selectedTaskId: id
   }))

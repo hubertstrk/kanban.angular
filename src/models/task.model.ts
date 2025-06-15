@@ -11,6 +11,6 @@ export interface Task {
   content: string;
   tags: string[];
   createdAt: string;
-  dueAt: string;
+  dueAt: string | null;
   status: TaskStatus;
 }
