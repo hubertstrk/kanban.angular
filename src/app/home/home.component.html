@@ -6,6 +6,10 @@
         (clicked)="toggleDarkMode()"
         [icon]="settings?.dark ? icons['fluent--weather-sunny-24-regular'] : icons['fluent--dark-theme-24-filled']">
       </app-button>
+      <app-button
+        (clicked)="createNewTask()"
+        [icon]="icons['material-symbols-light--add']">
+      </app-button>
     </div>
     <div class="flex space-x-2">
       <app-button
@@ -43,4 +47,32 @@
       </div>
     </div>
   </div>
+
+  <app-modal [isOpen]="isModalOpen" (closed)="closeModal()">
+    <div modalTitle>Create New Task</div>
+
+    <div class="space-y-4">
+      <app-text-input
+        label="Task Name"
+        placeholder="Enter task name"
+        [(ngModel)]="taskName"
+        [required]="true">
+      </app-text-input>
+
+      <app-text-input
+        label="Description"
+        placeholder="Enter task"
+        [(ngModel)]="taskDescription">
+      </app-text-input>
+    </div>
+
+    <div modalFooter class="flex space-x-2">
+      <app-button variant="transparent" [rounded]="false" (clicked)="closeModal()">
+        Cancel
+      </app-button>
+      <app-button variant="primary" [rounded]="false" (clicked)="saveTask()" [disabled]="!taskName">
+        Save
+      </app-button>
+    </div>
+  </app-modal>
 </div>
