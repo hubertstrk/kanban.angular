@@ -27,50 +27,62 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-3 gap-4 flex-grow w-full px-4 pb-4">
+  <div class="grid grid-cols-3 gap-4 flex-grow w-full px-4 pb-4" cdkDropListGroup>
     <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
       <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Todo</h2>
-      <div class="flex-grow px-4">
-        <app-task-card *ngFor="let task of todos" [task]="task"></app-task-card>
+      <div (cdkDropListDropped)="drop($event)"
+           [cdkDropListData]="todos"
+           cdkDropList
+           class="flex-grow px-4"
+           id="todo-list">
+        <app-task-card *ngFor="let task of todos" [task]="task" cdkDrag></app-task-card>
       </div>
     </div>
     <div class="bg-gray-50 dark:bg-zinc-700 py-4 px-4 rounded-lg flex flex-col">
       <h2 class="uppercase mb-2 text-black dark:text-neutral-100">Progress</h2>
-      <div class="flex-grow px-4">
-        <app-task-card *ngFor="let task of progress" [task]="task"></app-task-card>
+      <div (cdkDropListDropped)="drop($event)"
+           [cdkDropListData]="progress"
+           cdkDropList
+           class="flex-grow px-4"
+           id="progress-list">
+        <app-task-card *ngFor="let task of progress" [task]="task" cdkDrag></app-task-card>
       </div>
     </div>
     <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
       <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Done</h2>
-      <div class="flex-grow px-4">
-        <app-task-card *ngFor="let task of done" [task]="task"></app-task-card>
+      <div (cdkDropListDropped)="drop($event)"
+           [cdkDropListData]="done"
+           cdkDropList
+           class="flex-grow px-4"
+           id="done-list">
+        <app-task-card *ngFor="let task of done" [task]="task" cdkDrag></app-task-card>
       </div>
     </div>
   </div>
 
-  <app-modal [isOpen]="isModalOpen" (closed)="closeModal()">
-    <div modalTitle>Create New Task</div>
+  <app-modal (closed)="closeModal()" [isOpen]="isModalOpen">
+    <div>Create New Task</div>
 
     <div class="space-y-4">
       <app-text-input
-        label="Task Name"
-        placeholder="Enter task name"
         [(ngModel)]="taskName"
-        [required]="true">
+        [required]="true"
+        label="Task Name"
+        placeholder="Enter task name">
       </app-text-input>
 
       <app-text-input
+        [(ngModel)]="taskContent"
         label="Description"
-        placeholder="Enter task"
-        [(ngModel)]="taskContent">
+        placeholder="Enter task">
       </app-text-input>
     </div>
 
-    <div modalFooter class="flex space-x-2">
-      <app-button variant="transparent" [rounded]="false" (clicked)="closeModal()">
+    <div class="flex space-x-2" modalFooter>
+      <app-button (clicked)="closeModal()" [rounded]="false" variant="transparent">
         Cancel
       </app-button>
-      <app-button variant="primary" [rounded]="false" (clicked)="saveTask()">
+      <app-button (clicked)="saveTask()" [rounded]="false" variant="primary">
         Save
       </app-button>
     </div>

@@ -15,35 +15,35 @@ import {TextInputComponent} from '../shared/text-input/app-text-input.component'
 import {TaskCardComponent} from '../shared/task-card/app-task-card.component';
 
 import {Store} from '@ngrx/store';
-import {createTask} from '@store/tasks/tasks.actions';
+import {createTask, updateTask} from '@store/tasks/tasks.actions';
 import {selectTasksByStatus} from "@store/tasks/tasks.selectors";
-import {TaskStatus, Task} from "@models/task.model";
+import {Task, TaskStatus} from "@models/task.model";
 import {AppState} from "@store/index";
+
+import {sortBy} from 'lodash-es';
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
 
 const appWindow = getCurrentWebviewWindow();
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, CdkDropList, CdkDrag, CdkDropListGroup],
   providers: [IconService],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private destroy$ = new Subject<void>();
-
   todos: Task[] = [];
   progress: Task[] = [];
   done: Task[] = [];
   deleted: Task[] = [];
-
   icons: { [key: string]: SafeHtml } = {};
   settings: Settings | null = null;
-
   // Modal control
   isModalOpen = false;
   taskName = '';
   taskContent = '';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private iconService: IconService,
@@ -80,25 +80,25 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store.select(selectTasksByStatus(TaskStatus.TODO))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.todos = tasks;
+        this.todos = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
       });
 
     this.store.select(selectTasksByStatus(TaskStatus.PROGRESS))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.progress = tasks;
+        this.progress = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
       });
 
     this.store.select(selectTasksByStatus(TaskStatus.DONE))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.done = tasks;
+        this.done = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
       });
 
     this.store.select(selectTasksByStatus(TaskStatus.DELETED))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.deleted = tasks;
+        this.deleted = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
       });
   }
 
@@ -160,9 +160,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  drop(event: CdkDragDrop<Task[]>) {
+    // do nothing if the item is dropped in the same container
+    if (event.previousContainer.id === event.container.id) return;
+
+    const task = event.previousContainer.data[event.previousIndex];
+
+    // Update the task status based on the target container
+    const newStatus = this.getStatusFromContainerId(event.container.id);
+    const updatedTask = {...task, status: newStatus} as Task;
+
+    this.store.dispatch(updateTask({task: updatedTask}));
+  }
+
   private applyTheme(): void {
     this.settings?.dark
       ? document.documentElement.classList.add('dark')
       : document.documentElement.classList.remove('dark');
+  }
+
+  private getStatusFromContainerId(containerId: string): string {
+    switch (containerId) {
+      case 'todo-list':
+        return 'todo';
+      case 'progress-list':
+        return 'progress';
+      case 'done-list':
+        return 'done';
+      default:
+        return 'todo';
+    }
   }
 }

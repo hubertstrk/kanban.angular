@@ -39,9 +39,9 @@ export const tasksReducer = createReducer(
     loading: true,
     error: null
   })),
-  on(TasksActions.createTaskSuccess, (state, {task}) => ({
+  on(TasksActions.createTaskSuccess, (state) => ({
     ...state,
-    tasks: [...state.tasks, task],
+    tasks: state.tasks,
     loading: false
   })),
   on(TasksActions.createTaskFailure, (state, {error}) => ({
@@ -49,8 +49,9 @@ export const tasksReducer = createReducer(
     error,
     loading: false
   })),
-  on(TasksActions.updateTask, state => ({
+  on(TasksActions.updateTask, (state, {task}) => ({
     ...state,
+    tasks: state.tasks.filter(x => x.id !== task.id).concat(task),
     loading: true,
     error: null
   })),
