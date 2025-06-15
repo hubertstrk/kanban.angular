@@ -1,0 +1,7 @@
+<div class="bg-white dark:bg-zinc-600 p-3 rounded-md mb-2 shadow-sm">
+  <div class="flex justify-between items-start">
+    <h3 class="font-medium">{{ task.title }}</h3>
+    <span class="text-xs text-sky-600 dark:text-sky-400 ml-2">{{ formatDate(task.createdAt) }}</span>
+  </div>
+  <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ task.content }}</p>
+</div>

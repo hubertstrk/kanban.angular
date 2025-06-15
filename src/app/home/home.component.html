@@ -31,19 +31,19 @@
     <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
       <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Todo</h2>
       <div class="flex-grow px-4">
-        <!-- Task items will go here -->
+        <app-task-card *ngFor="let task of todos" [task]="task"></app-task-card>
       </div>
     </div>
     <div class="bg-gray-50 dark:bg-zinc-700 py-4 px-4 rounded-lg flex flex-col">
       <h2 class="uppercase mb-2 text-black dark:text-neutral-100">Progress</h2>
       <div class="flex-grow px-4">
-        <!-- In progress items will go here -->
+        <app-task-card *ngFor="let task of progress" [task]="task"></app-task-card>
       </div>
     </div>
     <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
       <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Done</h2>
       <div class="flex-grow px-4">
-        <!-- Completed items will go here -->
+        <app-task-card *ngFor="let task of done" [task]="task"></app-task-card>
       </div>
     </div>
   </div>
