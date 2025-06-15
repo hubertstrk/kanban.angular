@@ -28,13 +28,16 @@
         "./src/store/*"
       ],
       "@models/*": [
-        "./src/model/*"
+        "./src/models/*"
       ],
       "@services/*": [
         "./src/services/*"
       ],
       "@app/*": [
         "./src/app/*"
+      ],
+      "@factory/*": [
+        "./src/factory/*"
       ]
     }
   },
