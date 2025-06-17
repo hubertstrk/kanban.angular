@@ -1,4 +1,4 @@
-<div class="w-full h-screen flex flex-col bg-white dark:bg-zinc-800 text-black dark:text-neutral-100">
+<div class="w-full h-screen flex flex-col bg-white dark:bg-zinc-800 text-black dark:text-neutral-100 overflow-hidden">
   <div class="flex items-center justify-between px-5 py-3" data-tauri-drag-region>
     <h1 class="uppercase text-2xl">Tasks</h1>
     <div class="flex space-x-2">
@@ -27,9 +27,9 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-3 gap-4 flex-grow w-full px-4 pb-4" cdkDropListGroup>
-    <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
-      <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Todo</h2>
+  <div class="grid grid-cols-3 gap-4 flex-grow w-full px-4 pb-4 overflow-hidden" cdkDropListGroup>
+    <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col max-h-full overflow-y-auto">
+      <app-section-header [title]="'Todo'" [count]="todos.length"></app-section-header>
       <div (cdkDropListDropped)="drop($event)"
            [cdkDropListData]="todos"
            cdkDropList
@@ -38,8 +38,8 @@
         <app-task-card *ngFor="let task of todos" [task]="task" cdkDrag></app-task-card>
       </div>
     </div>
-    <div class="bg-gray-50 dark:bg-zinc-700 py-4 px-4 rounded-lg flex flex-col">
-      <h2 class="uppercase mb-2 text-black dark:text-neutral-100">Progress</h2>
+    <div class="bg-gray-50 dark:bg-zinc-700 py-4 px-4 rounded-lg flex flex-col max-h-full overflow-y-auto">
+      <app-section-header [title]="'Progress'" [count]="progress.length"></app-section-header>
       <div (cdkDropListDropped)="drop($event)"
            [cdkDropListData]="progress"
            cdkDropList
@@ -48,8 +48,8 @@
         <app-task-card *ngFor="let task of progress" [task]="task" cdkDrag></app-task-card>
       </div>
     </div>
-    <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col">
-      <h2 class="uppercase mb-2 pl-4 text-black dark:text-neutral-100">Done</h2>
+    <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col max-h-full overflow-y-auto">
+      <app-section-header [title]="'Done'" [count]="done.length"></app-section-header>
       <div (cdkDropListDropped)="drop($event)"
            [cdkDropListData]="done"
            cdkDropList
@@ -70,12 +70,11 @@
         label="Task Name"
         placeholder="Enter task name">
       </app-text-input>
-
-      <app-text-input
+      <textarea
         [(ngModel)]="taskContent"
-        label="Description"
-        placeholder="Enter task">
-      </app-text-input>
+        rows="10"
+        class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700 w-full"
+      ></textarea>
     </div>
 
     <div class="flex space-x-2" modalFooter>

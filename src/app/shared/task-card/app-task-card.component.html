@@ -1,7 +1,51 @@
-<div class="bg-white dark:bg-zinc-600 p-3 rounded-md mb-2 shadow-sm">
+<div class="flex flex-col bg-white dark:bg-zinc-600 p-3 rounded-md mb-2 shadow-sm relative group gap-1"
+     (dblclick)="onEditTask()">
   <div class="flex justify-between items-start">
-    <h3 [ngClass]="getTitleClass()">{{ task.title }}</h3>
-    <span class="text-xs text-sky-600 dark:text-sky-400 ml-2">{{ formatDate(task.createdAt) }}</span>
+    <div class="flex flex-col gap-1">
+      <div [ngClass]="getTitleClass()">{{ task.title }}</div>
+      <div class="text-xs text-sky-600 dark:text-sky-400">{{ formatDate(task.createdAt) }}</div>
+    </div>
+    <app-button
+      *ngIf="task.status === 'done'"
+      (clicked)="onDeleteTask()"
+      [size]="'sm'"
+      [icon]="icons['fluent--delete-24-regular']">
+    </app-button>
   </div>
-  <p class="text-sm text-zinc-600 dark:text-zinc-300 mt-1">{{ task.content }}</p>
+
+  <div class="text-sm text-zinc-600 dark:text-zinc-300 mt-1" (mousedown)="onTextMouseDown($event)"
+  >{{ getTaskContent(task.content) }}
+  </div>
 </div>
+
+<app-modal [isOpen]="isModalOpen" (closed)="closeModal()">
+  <div modalTitle>Edit Task</div>
+
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="taskTitle" class="text-sm font-medium">Title</label>
+      <input
+        id="taskTitle"
+        type="text"
+        [(ngModel)]="editedTask.title"
+        class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700"
+      >
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="taskContent" class="text-sm font-medium">Content</label>
+      <textarea
+        id="taskContent"
+        [(ngModel)]="editedTask.content"
+        rows="10"
+        class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700"
+        (mousedown)="onTextMouseDown($event)"
+      ></textarea>
+    </div>
+  </div>
+
+  <div modalFooter class="flex gap-2">
+    <app-button (clicked)="closeModal()" [rounded]="false">Cancel</app-button>
+    <app-button (clicked)="saveTask()" [variant]="'primary'" [rounded]="false">Save</app-button>
+  </div>
+</app-modal>

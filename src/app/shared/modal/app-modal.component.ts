@@ -46,21 +46,22 @@ export class ModalComponent implements OnInit {
   }
 
   get backdropClasses(): string {
-    return 'fixed inset-0 backdrop-blur-sm';
+    return `
+      fixed inset-0 backdrop-blur-sm ${this.isOpen ? '' : 'pointer-events-none'}`;
   }
 
   get modalClasses(): string {
     return `
-      fixed inset-0 z-50 flex items-center justify-center overflow-y-auto
-      ${this.isOpen ? 'visible' : 'invisible'}
+      fixed inset-0 z-50 flex items-center justify-center overflow-y-auto transition-opacity duration-300
+      ${this.isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
     `;
   }
 
   get contentClasses(): string {
     return `
-      bg-white dark:bg-zinc-800 text-black dark:text-neutral-100 rounded-lg shadow-xl transform transition-all
+      bg-white dark:bg-zinc-800 text-black dark:text-neutral-100 rounded-lg shadow-xl transform transition-all duration-500
       w-4/5 md:w-1/2 mx-auto
-      ${this.isOpen ? 'translate-y-0' : '-translate-y-4'}
+      ${this.isOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}
     `;
   }
 }

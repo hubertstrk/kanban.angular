@@ -1,5 +1,5 @@
-import { createAction, props } from '@ngrx/store';
-import { Task } from '@models/task.model';
+import {createAction, props} from '@ngrx/store';
+import {Task} from '@models/task.model';
 
 export const loadTasks = createAction('[Tasks] Load Tasks');
 export const loadTasksSuccess = createAction(
@@ -41,3 +41,8 @@ export const selectTask = createAction(
   '[Tasks] Select Task',
   props<{ id: string | null }>()
 );
+
+export const deleteTask = createAction(
+  '[Tasks] Delete Task',
+  props<{ id: string }>()
+)

@@ -13,6 +13,7 @@ import {ButtonComponent} from '../shared/button/app-button.component';
 import {ModalComponent} from '../shared/modal/app-modal.component';
 import {TextInputComponent} from '../shared/text-input/app-text-input.component';
 import {TaskCardComponent} from '../shared/task-card/app-task-card.component';
+import {SectionHeaderComponent} from '../shared/section-header/app-section-header.component';
 
 import {Store} from '@ngrx/store';
 import {createTask, updateTask} from '@store/tasks/tasks.actions';
@@ -29,7 +30,7 @@ const appWindow = getCurrentWebviewWindow();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, CdkDropList, CdkDrag, CdkDropListGroup],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup],
   providers: [IconService],
   templateUrl: './home.component.html'
 })
@@ -169,7 +170,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const task = event.previousContainer.data[event.previousIndex];
 
     const newStatus = this.statusMapping[event.container.id]
-    
+
     const updatedTask = {...task, status: newStatus} as Task;
 
     this.store.dispatch(updateTask({task: updatedTask}));

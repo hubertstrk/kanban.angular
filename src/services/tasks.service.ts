@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BaseDirectory, exists, readDir, readTextFile, writeTextFile} from '@tauri-apps/plugin-fs';
+import {BaseDirectory, exists, readDir, readTextFile, remove, writeTextFile} from '@tauri-apps/plugin-fs';
 import {Task} from '@models/task.model';
 import {APP_DIR, TASKS_DIR} from '@models/app-constants.model';
 import {from, Observable} from 'rxjs';
@@ -90,6 +90,22 @@ export class TasksService {
       return task;
     } catch (error) {
       console.error('Error saving task:', error);
+      throw error;
+    }
+  }
+
+  deleteTask(id: string) {
+    return from(this.deleteTaskAsync(id));
+  }
+
+  private async deleteTaskAsync(id: string): Promise<void> {
+    try {
+      const tasksDirPath = await join(APP_DIR, TASKS_DIR);
+      const taskFilePath = await join(tasksDirPath, `${id}.json`);
+
+      await remove(taskFilePath, {baseDir: BaseDirectory.AppData});
+    } catch (error) {
+      console.error(`Error deleting task with ID ${id}:`, error);
       throw error;
     }
   }
