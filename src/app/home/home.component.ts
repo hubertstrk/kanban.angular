@@ -15,24 +15,22 @@ import {TextInputComponent} from '../shared/text-input/app-text-input.component'
 import {TaskCardComponent} from '../shared/task-card/app-task-card.component';
 import {SectionHeaderComponent} from '../shared/section-header/app-section-header.component';
 import {DropdownComponent, DropdownOption} from '../shared/dropdown/app-dropdown.component';
-import {TagComponent} from '../shared/tag/app-tag.component';
 
 import {Store} from '@ngrx/store';
 import {createTask, updateTask} from '@store/tasks/tasks.actions';
 import {selectTasksByStatus} from "@store/tasks/tasks.selectors";
-import {Task, TaskStatus, TaskPriority} from "@models/task.model";
+import {Task, TaskPriority, TaskStatus, TaskStatusMapping} from "@models/task.model";
 import {AppState} from "@store/index";
 
 import {sortBy} from 'lodash-es';
 import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
-import {TaskStatusMapping} from "@models/task.model";
 
 const appWindow = getCurrentWebviewWindow();
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent, TagComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent],
   providers: [IconService],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
