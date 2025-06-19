@@ -20,22 +20,22 @@ export const selectTasksByStatus = (status: TaskStatus) => createSelector(
 // Predefined selectors for each status
 export const selectTodoTasks = createSelector(
   selectAllTasks,
-  (tasks) => tasks.filter(task => task.status === TaskStatus.TODO)
+  (tasks) => tasks.filter(task => task.status === TaskStatus.Todo)
 );
 
 export const selectProgressTasks = createSelector(
   selectAllTasks,
-  (tasks) => tasks.filter(task => task.status === TaskStatus.PROGRESS)
+  (tasks) => tasks.filter(task => task.status === TaskStatus.Progress)
 );
 
 export const selectDoneTasks = createSelector(
   selectAllTasks,
-  (tasks) => tasks.filter(task => task.status === TaskStatus.DONE)
+  (tasks) => tasks.filter(task => task.status === TaskStatus.Done)
 );
 
 export const selectDeletedTasks = createSelector(
   selectAllTasks,
-  (tasks) => tasks.filter(task => task.status === TaskStatus.DELETED)
+  (tasks) => tasks.filter(task => task.status === TaskStatus.Deleted)
 );
 
 // Select loading state

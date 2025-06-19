@@ -72,16 +72,26 @@
       </app-text-input>
       <textarea
         [(ngModel)]="taskContent"
-        rows="10"
+        rows="6"
         class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700 w-full"
       ></textarea>
+
+      <div class="flex flex-col gap-2">
+        <label for="taskPriority" class="text-sm font-medium">Priority</label>
+        <app-dropdown
+          id="taskPriority"
+          [options]="priorityOptions"
+          [selectedValue]="taskPriority"
+          (selectionChange)="onPriorityChange($event)"
+        ></app-dropdown>
+      </div>
     </div>
 
     <div class="flex space-x-2" modalFooter>
       <app-button (clicked)="closeModal()" [rounded]="false" variant="transparent">
         Cancel
       </app-button>
-      <app-button (clicked)="saveTask()" [rounded]="false" variant="primary">
+      <app-button (clicked)="saveTask()" [rounded]="false" variant="secondary">
         Save
       </app-button>
     </div>

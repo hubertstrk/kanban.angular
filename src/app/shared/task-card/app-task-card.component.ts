@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Task} from '@models/task.model';
+import {Task, TaskPriority} from '@models/task.model';
 import {Store} from '@ngrx/store';
 import {deleteTask, updateTask} from '@store/tasks/tasks.actions';
 import {ButtonComponent} from '../button/app-button.component';
@@ -9,11 +9,13 @@ import {SafeHtml} from "@angular/platform-browser";
 import {Subject, takeUntil} from "rxjs";
 import {ModalComponent} from '../modal/app-modal.component';
 import {FormsModule} from '@angular/forms';
+import {DropdownComponent, DropdownOption} from '../dropdown/app-dropdown.component';
+import {TagComponent} from '../tag/app-tag.component';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, ModalComponent, FormsModule],
+  imports: [CommonModule, ButtonComponent, ModalComponent, FormsModule, DropdownComponent, TagComponent],
   templateUrl: './app-task-card.component.html',
 })
 export class TaskCardComponent implements OnInit, OnDestroy {
@@ -22,6 +24,13 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   icons: { [key: string]: SafeHtml } = {};
   isModalOpen = false;
   editedTask: Partial<Task> = {};
+
+  protected readonly TaskPriority = TaskPriority;
+  priorityOptions: DropdownOption[] = [
+    { value: TaskPriority.Low, label: 'Low' },
+    { value: TaskPriority.Medium, label: 'Medium' },
+    { value: TaskPriority.High, label: 'High' }
+  ];
 
   destroy$ = new Subject<void>();
 
@@ -35,7 +44,8 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   onEditTask(): void {
     this.editedTask = {
       title: this.task.title,
-      content: this.task.content
+      content: this.task.content,
+      priority: this.task.priority || TaskPriority.Medium
     };
     this.isModalOpen = true;
   }
@@ -48,11 +58,32 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     const updatedTask: Task = {
       ...this.task,
       title: this.editedTask.title || '',
-      content: this.editedTask.content || ''
+      content: this.editedTask.content || '',
+      priority: this.editedTask.priority || TaskPriority.Medium,
     };
 
     this.store.dispatch(updateTask({task: updatedTask}));
     this.closeModal();
+  }
+
+  onPriorityChange(priority: string): void {
+    this.editedTask.priority = priority as TaskPriority;
+  }
+
+  getPriorityColor(priority?: TaskPriority): string {
+    if (!priority) return 'bg-gray-400';
+
+    console.log(`Priority: ${priority}`); // Debugging line to check priority value
+    switch (priority) {
+      case TaskPriority.Low:
+        return 'bg-green-500';
+      case TaskPriority.Medium:
+        return 'bg-yellow-500';
+      case TaskPriority.High:
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-400';
+    }
   }
 
   formatDate(dateString: string): string {
@@ -84,6 +115,8 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.iconsService.getIcons(['fluent--delete-24-regular']).pipe(takeUntil(this.destroy$)).subscribe(icons => {
       this.icons = icons;
     });
+
+    console.log('TaskCardComponent initialized with task:', this.task); // Debugging line to check task initialization
   }
 
   ngOnDestroy(): void {

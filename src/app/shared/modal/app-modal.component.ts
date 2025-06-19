@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IconService} from '@services/icons.service';
 import {SafeHtml} from '@angular/platform-browser';
@@ -43,6 +43,13 @@ export class ModalComponent implements OnInit {
 
   stopPropagation(event: MouseEvent): void {
     event.stopPropagation();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKeydown(): void {
+    if (this.isOpen) {
+      this.close();
+    }
   }
 
   get backdropClasses(): string {

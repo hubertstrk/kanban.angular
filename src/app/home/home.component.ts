@@ -14,23 +14,25 @@ import {ModalComponent} from '../shared/modal/app-modal.component';
 import {TextInputComponent} from '../shared/text-input/app-text-input.component';
 import {TaskCardComponent} from '../shared/task-card/app-task-card.component';
 import {SectionHeaderComponent} from '../shared/section-header/app-section-header.component';
+import {DropdownComponent, DropdownOption} from '../shared/dropdown/app-dropdown.component';
+import {TagComponent} from '../shared/tag/app-tag.component';
 
 import {Store} from '@ngrx/store';
 import {createTask, updateTask} from '@store/tasks/tasks.actions';
 import {selectTasksByStatus} from "@store/tasks/tasks.selectors";
-import {Task, TaskStatus} from "@models/task.model";
+import {Task, TaskStatus, TaskPriority} from "@models/task.model";
 import {AppState} from "@store/index";
 
 import {sortBy} from 'lodash-es';
 import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
-import {TaskStatusMapping} from "@models/todo.model";
+import {TaskStatusMapping} from "@models/task.model";
 
 const appWindow = getCurrentWebviewWindow();
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent, TagComponent],
   providers: [IconService],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -48,6 +50,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   isModalOpen = false;
   taskName = '';
   taskContent = '';
+  taskPriority: TaskPriority = TaskPriority.Medium;
+  priorityOptions: DropdownOption[] = [
+    { value: TaskPriority.Low, label: 'Low' },
+    { value: TaskPriority.Medium, label: 'Medium' },
+    { value: TaskPriority.High, label: 'High' }
+  ];
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -82,25 +90,25 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
 
     // Subscribe to tasks by status
-    this.store.select(selectTasksByStatus(TaskStatus.TODO))
+    this.store.select(selectTasksByStatus(TaskStatus.Todo))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
         this.todos = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
       });
 
-    this.store.select(selectTasksByStatus(TaskStatus.PROGRESS))
+    this.store.select(selectTasksByStatus(TaskStatus.Progress))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
         this.progress = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
       });
 
-    this.store.select(selectTasksByStatus(TaskStatus.DONE))
+    this.store.select(selectTasksByStatus(TaskStatus.Done))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
         this.done = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
       });
 
-    this.store.select(selectTasksByStatus(TaskStatus.DELETED))
+    this.store.select(selectTasksByStatus(TaskStatus.Deleted))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
         this.deleted = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
@@ -122,6 +130,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isModalOpen = true;
     this.taskName = '';
     this.taskContent = '';
+    this.taskPriority = TaskPriority.Medium;
+  }
+
+  onPriorityChange(priority: string): void {
+    this.taskPriority = priority as TaskPriority;
   }
 
   saveTask(): void {
@@ -131,10 +144,10 @@ export class HomeComponent implements OnInit, OnDestroy {
           id: v4(),
           title: this.taskName,
           content: this.taskContent,
-          status: TaskStatus.TODO,
+          status: TaskStatus.Todo,
           createdAt: new Date().toISOString(),
-          tags: [],
           dueAt: null,
+          priority: this.taskPriority
         }
       }))
 
