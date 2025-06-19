@@ -14,7 +14,7 @@ import {ModalComponent} from '../shared/modal/app-modal.component';
 import {TextInputComponent} from '../shared/text-input/app-text-input.component';
 import {TaskCardComponent} from '../shared/task-card/app-task-card.component';
 import {SectionHeaderComponent} from '../shared/section-header/app-section-header.component';
-import {DropdownComponent, DropdownOption} from '../shared/dropdown/app-dropdown.component';
+import {DropdownComponent} from '../shared/dropdown/app-dropdown.component';
 import {DatePickerComponent} from '../shared/date-picker/app-date-picker.component';
 
 import {Store} from '@ngrx/store';
@@ -89,19 +89,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store.select(selectTasksByStatus(TaskStatus.Todo))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.todos = sortBy(tasks, ['dueAt', 'title'], ['asc', 'asc']);
+        this.todos = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
       });
 
     this.store.select(selectTasksByStatus(TaskStatus.Progress))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.progress = sortBy(tasks, ['dueAt', 'title'], ['asc', 'asc']);
+        this.progress = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
       });
 
     this.store.select(selectTasksByStatus(TaskStatus.Done))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.done = sortBy(tasks, ['dueAt', 'title'], ['asc', 'asc']);
+        this.done = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
       });
   }
 

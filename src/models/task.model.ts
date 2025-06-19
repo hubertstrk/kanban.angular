@@ -33,3 +33,9 @@ export const PriorityOptions: DropdownOption[] = [
   {value: TaskPriority.Medium, label: 'Medium'},
   {value: TaskPriority.High, label: 'High'}
 ];
+
+export interface OverdueStatus {
+  isOverdue: Boolean;
+  overdueReadable: string | null;
+  differenceSeconds: number;
+}

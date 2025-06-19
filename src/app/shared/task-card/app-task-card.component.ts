@@ -9,14 +9,14 @@ import {SafeHtml} from "@angular/platform-browser";
 import {Subject, takeUntil} from "rxjs";
 import {ModalComponent} from '../modal/app-modal.component';
 import {FormsModule} from '@angular/forms';
-import {DropdownComponent, DropdownOption} from '../dropdown/app-dropdown.component';
-import {TagComponent} from '../tag/app-tag.component';
+import {DropdownComponent} from '../dropdown/app-dropdown.component';
 import {DatePickerComponent} from '../date-picker/app-date-picker.component';
+import {DueDatePipe} from './due-date.pipe';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, ModalComponent, FormsModule, DropdownComponent, TagComponent, DatePickerComponent],
+  imports: [CommonModule, ButtonComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, DueDatePipe],
   templateUrl: './app-task-card.component.html',
 })
 export class TaskCardComponent implements OnInit, OnDestroy {
@@ -28,7 +28,6 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   priorityOptions = PriorityOptions;
 
   protected readonly TaskPriority = TaskPriority;
-
 
   destroy$ = new Subject<void>();
 
@@ -74,15 +73,12 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.editedTask.dueAt = date;
   }
 
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  isOverdue(): boolean {
+    if (!this.task.dueAt) return false;
+
+    const now = new Date();
+    const dueDate = new Date(this.task.dueAt);
+    return dueDate.getTime() - now.getTime() < 0;
   }
 
   getTitleClass(): string {
@@ -90,11 +86,13 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     const doneClass = this.task.status === 'done' ? 'line-through' : '';
     return `${base} ${doneClass}`;
   }
-
-  getDueAtClass(): string {
-    const base = 'text-sm text-zinc-400 dark:text-neutral-300';
+ 
+  getDueClass(): string {
     const doneClass = this.task.status === 'done' ? 'line-through' : '';
-    return `${base} ${doneClass}`;
+
+    const overdueClass = this.isOverdue() ? 'text-red-500' : 'text-zinc-400 dark:text-neutral-300';
+
+    return `text-sm ${doneClass} ${overdueClass}`;
   }
 
   getTaskContent(content: string): string {

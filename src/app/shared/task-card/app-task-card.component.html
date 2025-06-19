@@ -5,7 +5,12 @@
     <div class="flex">
       <div class="flex flex-col">
         <div [ngClass]="getTitleClass()">{{ task.title }}</div>
-        <div [ngClass]="getDueAtClass()">{{ task.dueAt }}</div>
+        <div
+          *ngIf="task.dueAt"
+          [ngClass]="getDueClass()">
+          <span *ngIf="isOverdue()">{{ task.dueAt | dueDate }} overdue</span>
+          <span *ngIf="!isOverdue()">{{ task.dueAt | dueDate }} left</span>
+        </div>
       </div>
       <app-button
         *ngIf="task.status === 'done'"
