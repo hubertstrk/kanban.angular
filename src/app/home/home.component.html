@@ -85,6 +85,15 @@
           (selectionChange)="onPriorityChange($event)"
         ></app-dropdown>
       </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="taskDueDate" class="text-sm font-medium">Due Date</label>
+        <app-date-picker
+          id="taskDueDate"
+          [date]="taskDueDate"
+          (dateChange)="onDueDateChange($event)"
+        ></app-date-picker>
+      </div>
     </div>
 
     <div class="flex space-x-2" modalFooter>

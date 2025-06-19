@@ -11,11 +11,12 @@ import {ModalComponent} from '../modal/app-modal.component';
 import {FormsModule} from '@angular/forms';
 import {DropdownComponent, DropdownOption} from '../dropdown/app-dropdown.component';
 import {TagComponent} from '../tag/app-tag.component';
+import {DatePickerComponent} from '../date-picker/app-date-picker.component';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, ModalComponent, FormsModule, DropdownComponent, TagComponent],
+  imports: [CommonModule, ButtonComponent, ModalComponent, FormsModule, DropdownComponent, TagComponent, DatePickerComponent],
   templateUrl: './app-task-card.component.html',
 })
 export class TaskCardComponent implements OnInit, OnDestroy {
@@ -45,7 +46,8 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.editedTask = {
       title: this.task.title,
       content: this.task.content,
-      priority: this.task.priority || TaskPriority.Medium
+      priority: this.task.priority || TaskPriority.Medium,
+      dueAt: this.task.dueAt
     };
     this.isModalOpen = true;
   }
@@ -60,6 +62,7 @@ export class TaskCardComponent implements OnInit, OnDestroy {
       title: this.editedTask.title || '',
       content: this.editedTask.content || '',
       priority: this.editedTask.priority || TaskPriority.Medium,
+      dueAt: this.editedTask.dueAt || null,
     };
 
     this.store.dispatch(updateTask({task: updatedTask}));
@@ -70,10 +73,13 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.editedTask.priority = priority as TaskPriority;
   }
 
+  onDueDateChange(date: string): void {
+    this.editedTask.dueAt = date;
+  }
+
   getPriorityColor(priority?: TaskPriority): string {
     if (!priority) return 'bg-gray-400';
 
-    console.log(`Priority: ${priority}`); // Debugging line to check priority value
     switch (priority) {
       case TaskPriority.Low:
         return 'bg-green-500';
@@ -98,7 +104,13 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   }
 
   getTitleClass(): string {
-    const base = 'text-zinc-500 dark:text-neutral-100';
+    const base = 'text-lg text-zinc-500 dark:text-neutral-100';
+    const doneClass = this.task.status === 'done' ? 'line-through' : '';
+    return `${base} ${doneClass}`;
+  }
+
+  getDueAtClass(): string {
+    const base = 'text-sm text-zinc-400 dark:text-neutral-300';
     const doneClass = this.task.status === 'done' ? 'line-through' : '';
     return `${base} ${doneClass}`;
   }
@@ -115,8 +127,6 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.iconsService.getIcons(['fluent--delete-24-regular']).pipe(takeUntil(this.destroy$)).subscribe(icons => {
       this.icons = icons;
     });
-
-    console.log('TaskCardComponent initialized with task:', this.task); // Debugging line to check task initialization
   }
 
   ngOnDestroy(): void {

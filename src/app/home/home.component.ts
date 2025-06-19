@@ -15,6 +15,7 @@ import {TextInputComponent} from '../shared/text-input/app-text-input.component'
 import {TaskCardComponent} from '../shared/task-card/app-task-card.component';
 import {SectionHeaderComponent} from '../shared/section-header/app-section-header.component';
 import {DropdownComponent, DropdownOption} from '../shared/dropdown/app-dropdown.component';
+import {DatePickerComponent} from '../shared/date-picker/app-date-picker.component';
 
 import {Store} from '@ngrx/store';
 import {createTask, updateTask} from '@store/tasks/tasks.actions';
@@ -30,7 +31,7 @@ const appWindow = getCurrentWebviewWindow();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent, DatePickerComponent],
   providers: [IconService],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -44,11 +45,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   settings: Settings | null = null;
   statusMapping = TaskStatusMapping;
 
-  // Modal control
   isModalOpen = false;
   taskName = '';
   taskContent = '';
   taskPriority: TaskPriority = TaskPriority.Medium;
+  taskDueDate: string | null = null;
   priorityOptions: DropdownOption[] = [
     { value: TaskPriority.Low, label: 'Low' },
     { value: TaskPriority.Medium, label: 'Medium' },
@@ -129,10 +130,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.taskName = '';
     this.taskContent = '';
     this.taskPriority = TaskPriority.Medium;
+    this.taskDueDate = null;
   }
 
   onPriorityChange(priority: string): void {
     this.taskPriority = priority as TaskPriority;
+  }
+
+  onDueDateChange(date: string): void {
+    this.taskDueDate = date;
   }
 
   saveTask(): void {
@@ -144,7 +150,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           content: this.taskContent,
           status: TaskStatus.Todo,
           createdAt: new Date().toISOString(),
-          dueAt: null,
+          dueAt: this.taskDueDate,
           priority: this.taskPriority
         }
       }))
