@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Task, TaskPriority} from '@models/task.model';
+import {PriorityOptions, Task, TaskPriority} from '@models/task.model';
 import {Store} from '@ngrx/store';
 import {deleteTask, updateTask} from '@store/tasks/tasks.actions';
 import {ButtonComponent} from '../button/app-button.component';
@@ -25,13 +25,10 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   icons: { [key: string]: SafeHtml } = {};
   isModalOpen = false;
   editedTask: Partial<Task> = {};
+  priorityOptions = PriorityOptions;
 
   protected readonly TaskPriority = TaskPriority;
-  priorityOptions: DropdownOption[] = [
-    { value: TaskPriority.Low, label: 'Low' },
-    { value: TaskPriority.Medium, label: 'Medium' },
-    { value: TaskPriority.High, label: 'High' }
-  ];
+
 
   destroy$ = new Subject<void>();
 
@@ -77,21 +74,6 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.editedTask.dueAt = date;
   }
 
-  getPriorityColor(priority?: TaskPriority): string {
-    if (!priority) return 'bg-gray-400';
-
-    switch (priority) {
-      case TaskPriority.Low:
-        return 'bg-green-500';
-      case TaskPriority.Medium:
-        return 'bg-yellow-500';
-      case TaskPriority.High:
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-400';
-    }
-  }
-
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -117,6 +99,25 @@ export class TaskCardComponent implements OnInit, OnDestroy {
 
   getTaskContent(content: string): string {
     return content.substring(0, 200) + (content.length > 200 ? '...' : '');
+  }
+
+  getPriorityClass(): string {
+    const base = 'min-w-1 max-w-1'
+
+    const getPriorityClass = ((priority: TaskPriority) => {
+      switch (priority) {
+        case TaskPriority.Low:
+          return 'bg-green-400';
+        case TaskPriority.Medium:
+          return 'bg-yellow-500';
+        case TaskPriority.High:
+          return 'bg-red-500';
+        default:
+          return 'bg-gray-400';
+      }
+    });
+
+    return `${base} ${getPriorityClass(this.task.priority || TaskPriority.Medium)}`;
   }
 
   onTextMouseDown(event: MouseEvent): void {

@@ -1,6 +1,6 @@
-import { createSelector } from '@ngrx/store';
-import { AppState } from '@store/index';
-import { TaskStatus } from '@models/task.model';
+import {createSelector} from '@ngrx/store';
+import {AppState} from '@store/index';
+import {TaskStatus} from '@models/task.model';
 
 // Feature selector
 export const selectTasksState = (state: AppState) => state.tasks;
@@ -31,11 +31,6 @@ export const selectProgressTasks = createSelector(
 export const selectDoneTasks = createSelector(
   selectAllTasks,
   (tasks) => tasks.filter(task => task.status === TaskStatus.Done)
-);
-
-export const selectDeletedTasks = createSelector(
-  selectAllTasks,
-  (tasks) => tasks.filter(task => task.status === TaskStatus.Deleted)
 );
 
 // Select loading state

@@ -28,7 +28,7 @@
   </div>
 
   <div class="grid grid-cols-3 gap-4 flex-grow w-full px-4 pb-4 overflow-hidden" cdkDropListGroup>
-    <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col max-h-full overflow-y-auto">
+    <div [ngClass]="getColumnClass()">
       <app-section-header [title]="'Todo'" [count]="todos.length"></app-section-header>
       <div (cdkDropListDropped)="drop($event)"
            [cdkDropListData]="todos"
@@ -38,7 +38,7 @@
         <app-task-card *ngFor="let task of todos" [task]="task" cdkDrag></app-task-card>
       </div>
     </div>
-    <div class="bg-gray-50 dark:bg-zinc-700 py-4 px-4 rounded-lg flex flex-col max-h-full overflow-y-auto">
+    <div [ngClass]="getColumnClass()">
       <app-section-header [title]="'Progress'" [count]="progress.length"></app-section-header>
       <div (cdkDropListDropped)="drop($event)"
            [cdkDropListData]="progress"
@@ -48,7 +48,7 @@
         <app-task-card *ngFor="let task of progress" [task]="task" cdkDrag></app-task-card>
       </div>
     </div>
-    <div class="bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col max-h-full overflow-y-auto">
+    <div [ngClass]="getColumnClass()">
       <app-section-header [title]="'Done'" [count]="done.length"></app-section-header>
       <div (cdkDropListDropped)="drop($event)"
            [cdkDropListData]="done"
@@ -64,20 +64,15 @@
     <div modalTitle>Create New Task</div>
 
     <div class="space-y-4">
+
       <app-text-input
         [(ngModel)]="taskName"
         [required]="true"
-        label="Task Name"
-        placeholder="Enter task name">
+        label="Title">
       </app-text-input>
-      <textarea
-        [(ngModel)]="taskContent"
-        rows="6"
-        class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700 w-full"
-      ></textarea>
 
       <div class="flex flex-col gap-2">
-        <label for="taskPriority" class="text-sm font-medium">Priority</label>
+        <label for="taskPriority" class="text-sm">Priority</label>
         <app-dropdown
           id="taskPriority"
           [options]="priorityOptions"
@@ -87,21 +82,32 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <label for="taskDueDate" class="text-sm font-medium">Due Date</label>
+        <label for="taskDueDate" class="text-sm">Due Date</label>
         <app-date-picker
           id="taskDueDate"
           [date]="taskDueDate"
           (dateChange)="onDueDateChange($event)"
         ></app-date-picker>
       </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="description" class="text-sm">Description</label>
+        <textarea
+          id="description"
+          [(ngModel)]="taskContent"
+          rows="6"
+          class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700 w-full"
+        ></textarea>
+      </div>
+
     </div>
 
     <div class="flex space-x-2" modalFooter>
       <app-button (clicked)="closeModal()" [rounded]="false" variant="transparent">
-        Cancel
+        <span class="px-2">Cancel</span>
       </app-button>
       <app-button (clicked)="saveTask()" [rounded]="false" variant="secondary">
-        Save
+        <span class="px-2">Save</span>
       </app-button>
     </div>
   </app-modal>

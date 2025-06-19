@@ -1,8 +1,9 @@
+import {DropdownOption} from "@app/shared/dropdown/app-dropdown.component";
+
 export enum TaskStatus {
   Todo = 'todo',
   Progress = 'progress',
   Done = 'done',
-  Deleted = 'deleted'
 }
 
 export enum TaskPriority {
@@ -25,5 +26,10 @@ export const TaskStatusMapping: Record<string, TaskStatus> = {
   ['progress-list']: TaskStatus.Progress,
   ['todo-list']: TaskStatus.Todo,
   ['done-list']: TaskStatus.Done,
-  ['deleted-list']: TaskStatus.Deleted,
 };
+
+export const PriorityOptions: DropdownOption[] = [
+  {value: TaskPriority.Low, label: 'Low'},
+  {value: TaskPriority.Medium, label: 'Medium'},
+  {value: TaskPriority.High, label: 'High'}
+];

@@ -1,23 +1,23 @@
-<div class="flex flex-col bg-white dark:bg-zinc-600 p-3 rounded-md mb-2 shadow-sm relative group gap-1"
+<div class="flex bg-white dark:bg-zinc-600 rounded-lg mb-2 shadow-sm"
      (dblclick)="onEditTask()">
-  <div class="flex justify-between items-start">
-    <div class="flex flex-col gap-1">
-      <div [ngClass]="getTitleClass()">{{ task.title }}</div>
-      <div  class="flex items-center gap-2">
-        <app-tag *ngIf="task.priority && task.priority !== 'medium'" [text]="task.priority" [color]="getPriorityColor(task.priority)"></app-tag>
+  <div [ngClass]="getPriorityClass()"></div>
+  <div class="p-3 flex flex-col">
+    <div class="flex">
+      <div class="flex flex-col">
+        <div [ngClass]="getTitleClass()">{{ task.title }}</div>
         <div [ngClass]="getDueAtClass()">{{ task.dueAt }}</div>
       </div>
+      <app-button
+        *ngIf="task.status === 'done'"
+        (clicked)="onDeleteTask()"
+        [size]="'sm'"
+        [icon]="icons['fluent--delete-24-regular']">
+      </app-button>
     </div>
-    <app-button
-      *ngIf="task.status === 'done'"
-      (clicked)="onDeleteTask()"
-      [size]="'sm'"
-      [icon]="icons['fluent--delete-24-regular']">
-    </app-button>
-  </div>
 
-  <div class="text-sm text-zinc-600 dark:text-zinc-300" (mousedown)="onTextMouseDown($event)"
-  >{{ getTaskContent(task.content) }}
+    <div class="text-sm text-zinc-600 dark:text-zinc-300" (mousedown)="onTextMouseDown($event)"
+    >{{ getTaskContent(task.content) }}
+    </div>
   </div>
 </div>
 
@@ -36,18 +36,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label for="taskContent" class="text-sm font-medium">Description</label>
-      <textarea
-        id="taskContent"
-        [(ngModel)]="editedTask.content"
-        rows="6"
-        class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700"
-        (mousedown)="onTextMouseDown($event)"
-      ></textarea>
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <label for="taskPriority" class="text-sm font-medium">Priority</label>
+      <label for="taskPriority" class="text-sm">Priority</label>
       <app-dropdown
         id="taskPriority"
         [options]="priorityOptions"
@@ -57,17 +46,32 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label for="taskDueDate" class="text-sm font-medium">Due Date</label>
+      <label for="taskDueDate" class="text-sm">Due Date</label>
       <app-date-picker
         id="taskDueDate"
         [date]="editedTask.dueAt ?? null"
         (dateChange)="onDueDateChange($event)"
       ></app-date-picker>
     </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="taskContent" class="text-sm">Description</label>
+      <textarea
+        id="taskContent"
+        [(ngModel)]="editedTask.content"
+        rows="6"
+        class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700"
+        (mousedown)="onTextMouseDown($event)"
+      ></textarea>
+    </div>
   </div>
 
   <div modalFooter class="flex gap-2">
-    <app-button (clicked)="closeModal()" [rounded]="false">Cancel</app-button>
-    <app-button (clicked)="saveTask()" [variant]="'primary'" [rounded]="false">Save</app-button>
+    <app-button (clicked)="closeModal()" [rounded]="false">
+      <span class="px-2">Cancel</span>
+    </app-button>
+    <app-button (clicked)="saveTask()" [variant]="'secondary'" [rounded]="false">
+      <span class="px-2">Save</span>
+    </app-button>
   </div>
 </app-modal>

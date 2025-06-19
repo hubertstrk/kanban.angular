@@ -23,11 +23,13 @@ export const tasksReducer = createReducer(
     loading: true,
     error: null
   })),
-  on(TasksActions.loadTasksSuccess, (state, {tasks}) => ({
-    ...state,
-    tasks,
-    loading: false
-  })),
+  on(TasksActions.loadTasksSuccess, (state, {tasks}) => {
+    return {
+      ...state,
+      tasks,
+      loading: false
+    }
+  }),
   on(TasksActions.loadTasksFailure, (state, {error}) => ({
     ...state,
     error,

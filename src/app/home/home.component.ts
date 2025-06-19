@@ -20,7 +20,7 @@ import {DatePickerComponent} from '../shared/date-picker/app-date-picker.compone
 import {Store} from '@ngrx/store';
 import {createTask, updateTask} from '@store/tasks/tasks.actions';
 import {selectTasksByStatus} from "@store/tasks/tasks.selectors";
-import {Task, TaskPriority, TaskStatus, TaskStatusMapping} from "@models/task.model";
+import {PriorityOptions, Task, TaskPriority, TaskStatus, TaskStatusMapping} from "@models/task.model";
 import {AppState} from "@store/index";
 
 import {sortBy} from 'lodash-es';
@@ -40,21 +40,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   todos: Task[] = [];
   progress: Task[] = [];
   done: Task[] = [];
-  deleted: Task[] = [];
   icons: { [key: string]: SafeHtml } = {};
   settings: Settings | null = null;
   statusMapping = TaskStatusMapping;
+  priorityOptions = PriorityOptions;
 
   isModalOpen = false;
   taskName = '';
   taskContent = '';
-  taskPriority: TaskPriority = TaskPriority.Medium;
+  taskPriority = TaskPriority.Low;
   taskDueDate: string | null = null;
-  priorityOptions: DropdownOption[] = [
-    { value: TaskPriority.Low, label: 'Low' },
-    { value: TaskPriority.Medium, label: 'Medium' },
-    { value: TaskPriority.High, label: 'High' }
-  ];
+
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -92,25 +89,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store.select(selectTasksByStatus(TaskStatus.Todo))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.todos = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
+        this.todos = sortBy(tasks, ['dueAt', 'title'], ['asc', 'asc']);
       });
 
     this.store.select(selectTasksByStatus(TaskStatus.Progress))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.progress = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
+        this.progress = sortBy(tasks, ['dueAt', 'title'], ['asc', 'asc']);
       });
 
     this.store.select(selectTasksByStatus(TaskStatus.Done))
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.done = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
-      });
-
-    this.store.select(selectTasksByStatus(TaskStatus.Deleted))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(tasks => {
-        this.deleted = sortBy(tasks, ['dueAt', 'createdAt'], ['asc', 'desc']);
+        this.done = sortBy(tasks, ['dueAt', 'title'], ['asc', 'asc']);
       });
   }
 
@@ -129,7 +120,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isModalOpen = true;
     this.taskName = '';
     this.taskContent = '';
-    this.taskPriority = TaskPriority.Medium;
+    this.taskPriority = TaskPriority.Low;
     this.taskDueDate = null;
   }
 
@@ -161,6 +152,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  getColumnClass(): string {
+    return 'bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col max-h-full overflow-y-auto';
+  }
+
+  private applyTheme(): void {
+    this.settings?.dark
+      ? document.documentElement.classList.add('dark')
+      : document.documentElement.classList.remove('dark');
+  }
+
   closeModal(): void {
     this.isModalOpen = false;
   }
@@ -177,11 +178,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     void appWindow.close();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer.id === event.container.id) return;
 
@@ -194,9 +190,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store.dispatch(updateTask({task: updatedTask}));
   }
 
-  private applyTheme(): void {
-    this.settings?.dark
-      ? document.documentElement.classList.add('dark')
-      : document.documentElement.classList.remove('dark');
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
