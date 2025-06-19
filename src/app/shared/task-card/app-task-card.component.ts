@@ -67,7 +67,9 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   }
 
   getTitleClass(): string {
-    return `font-medium ${this.task.status === 'done' ? 'line-through text-zinc-500 dark:text-neutral-100' : 'text-lg'}`;
+    const base = 'text-zinc-500 dark:text-neutral-100';
+    const doneClass = this.task.status === 'done' ? 'line-through' : '';
+    return `${base} ${doneClass}`;
   }
 
   getTaskContent(content: string): string {

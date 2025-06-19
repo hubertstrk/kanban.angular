@@ -1,0 +1,11 @@
+.cdk-drop-list-receiving {
+  border: 2px dashed #2196f3;
+}
+
+.cdk-drop-list-dragging {
+  opacity: 0.3;
+}
+
+.cdk-drop-list-group .cdk-drop-list:not(.cdk-drop-list-receiving) {
+  opacity: 0.6;
+}
