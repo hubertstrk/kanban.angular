@@ -118,7 +118,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         ...settings,
         dark: !settings.dark
       }
-      console.log('Updating settings:', updateSettings.dark);
       this.store.dispatch(saveSettings({settings: updateSettings}));
     })
   }

@@ -34,12 +34,18 @@
 
 <!-- view -->
 <app-modal [isOpen]="isViewModalOpen" (closed)="closeModal()">
-  <div modalTitle>{{ task.title }}</div>
+  <div modalTitle class="flex flex-col gap-2">
+    <div class="text-lg">{{ task.title }}</div>
+    <div
+      *ngIf="task.dueAt"
+      [ngClass]="getDueClass()">
+      <span *ngIf="isOverdue()">{{ task.dueAt | dueDate }} overdue</span>
+      <span *ngIf="!isOverdue()">{{ task.dueAt | dueDate }} left</span>
+    </div>
+  </div>
 
   <div class="flex flex-col">
-    <div>{{ task.title }}</div>
-    <div *ngIf="task.dueAt">{{ task.dueAt | date:'medium' }}</div>
-    <div [innerHTML]="getRenderedContent()"></div>
+    <div class="prose dark:prose-invert max-w-none" [innerHTML]="getRenderedContent()"></div>
   </div>
 </app-modal>
 
@@ -59,7 +65,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label for="taskPriority" class="text-sm">Priority</label>
+      <label class="text-sm">Priority</label>
       <app-dropdown
         id="taskPriority"
         [options]="priorityOptions"
@@ -69,7 +75,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label for="taskDueDate" class="text-sm">Due Date</label>
+      <label class="text-sm">Due Date</label>
       <app-date-picker
         id="taskDueDate"
         [date]="editedTask.dueAt ?? null"
@@ -78,7 +84,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label for="taskContent" class="text-sm">Description</label>
+      <label class="text-sm">Description</label>
       <app-monaco-editor
         id="taskContent"
         [content]="editedTask.content || ''"
