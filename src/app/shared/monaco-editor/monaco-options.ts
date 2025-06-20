@@ -1,0 +1,38 @@
+import * as monaco from 'monaco-editor';
+
+export const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+  theme: document.body.classList.contains('dark') ? 'vs-dark' : 'vs-light',
+  language: 'markdown',
+  mouseWheelZoom: true,
+  wordWrap: 'on',
+  automaticLayout: true,
+  renderWhitespace: 'boundary',
+  tabSize: 2,
+  insertSpaces: true,
+  wrappingIndent: 'same',
+  smoothScrolling: true,
+  lineDecorationsWidth: 0,
+  cursorSmoothCaretAnimation: 'on',
+  lineNumbers: 'off',
+  minimap: {enabled: false},
+  scrollbar: {
+    vertical: 'hidden',
+    horizontal: 'hidden',
+    alwaysConsumeMouseWheel: false
+  },
+  contextmenu: false,
+  fontSize: 14,
+  fontFamily: 'Fira Code, monospace',
+  glyphMargin: false,
+  folding: false,
+  fixedOverflowWidgets: true,
+  overviewRulerLanes: 0,
+  overviewRulerBorder: false,
+  renderLineHighlight: 'none',
+  renderLineHighlightOnlyWhenFocus: true,
+  renderValidationDecorations: 'off',
+  selectionHighlight: false,
+  scrollBeyondLastLine: false,
+  hideCursorInOverviewRuler: true,
+  cursorBlinking: 'smooth',
+};

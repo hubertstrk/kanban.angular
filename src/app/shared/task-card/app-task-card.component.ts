@@ -5,25 +5,29 @@ import {Store} from '@ngrx/store';
 import {deleteTask, updateTask} from '@store/tasks/tasks.actions';
 import {ButtonComponent} from '../button/app-button.component';
 import {IconService} from "@services/icons.service";
-import {SafeHtml} from "@angular/platform-browser";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 import {Subject, takeUntil} from "rxjs";
 import {ModalComponent} from '../modal/app-modal.component';
 import {FormsModule} from '@angular/forms';
 import {DropdownComponent} from '../dropdown/app-dropdown.component';
 import {DatePickerComponent} from '../date-picker/app-date-picker.component';
 import {DueDatePipe} from './due-date.pipe';
+import {marked} from 'marked';
+import {MonacoEditorComponent} from '../monaco-editor/app-monaco-editor.component';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, DueDatePipe],
+  imports: [CommonModule, ButtonComponent, MonacoEditorComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, DueDatePipe],
   templateUrl: './app-task-card.component.html',
 })
 export class TaskCardComponent implements OnInit, OnDestroy {
   @Input() task!: Task;
 
   icons: { [key: string]: SafeHtml } = {};
-  isModalOpen = false;
+  isEditModalOpen = false;
+  isViewModalOpen = false;
   editedTask: Partial<Task> = {};
   priorityOptions = PriorityOptions;
 
@@ -31,25 +35,38 @@ export class TaskCardComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject<void>();
 
-  constructor(private store: Store, private iconsService: IconService) {
+  constructor(private store: Store, private iconsService: IconService, private sanitizer: DomSanitizer) {
+  }
+
+  getRenderedContent(): SafeHtml {
+    if (!this.task.content) return '';
+    
+    const html = marked(this.task.content) as string;
+    const sanitizedHtml = DOMPurify.sanitize(html);
+    return this.sanitizer.bypassSecurityTrustHtml(sanitizedHtml);
   }
 
   onDeleteTask(): void {
     this.store.dispatch(deleteTask({id: this.task.id}));
   }
 
-  onEditTask(): void {
+  onOpenViewModal(): void {
+    this.isViewModalOpen = true;
+  }
+
+  onOpenEditModal(): void {
     this.editedTask = {
       title: this.task.title,
       content: this.task.content,
       priority: this.task.priority || TaskPriority.Medium,
       dueAt: this.task.dueAt
     };
-    this.isModalOpen = true;
+    this.isEditModalOpen = true;
   }
 
   closeModal(): void {
-    this.isModalOpen = false;
+    this.isEditModalOpen = false;
+    this.isViewModalOpen = false;
   }
 
   saveTask(): void {
@@ -86,12 +103,10 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     const doneClass = this.task.status === 'done' ? 'line-through' : '';
     return `${base} ${doneClass}`;
   }
- 
+
   getDueClass(): string {
     const doneClass = this.task.status === 'done' ? 'line-through' : '';
-
     const overdueClass = this.isOverdue() ? 'text-red-500' : 'text-zinc-400 dark:text-neutral-300';
-
     return `text-sm ${doneClass} ${overdueClass}`;
   }
 
@@ -118,12 +133,8 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     return `${base} ${getPriorityClass(this.task.priority || TaskPriority.Medium)}`;
   }
 
-  onTextMouseDown(event: MouseEvent): void {
-    event.stopPropagation();
-  }
-
   ngOnInit(): void {
-    this.iconsService.getIcons(['fluent--delete-24-regular']).pipe(takeUntil(this.destroy$)).subscribe(icons => {
+    this.iconsService.getIcons(['fluent--delete-24-regular', 'fluent--note-24-regular']).pipe(takeUntil(this.destroy$)).subscribe(icons => {
       this.icons = icons;
     });
   }

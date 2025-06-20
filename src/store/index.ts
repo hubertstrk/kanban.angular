@@ -4,6 +4,7 @@ import * as fromTasks from './tasks/tasks.reducer';
 import { SettingsEffects } from './settings/settings.effects';
 import { TasksEffects } from './tasks/tasks.effects';
 import * as TasksSelectors from './tasks/tasks.selectors';
+import * as SettingsSelectors from './settings/settings.selectors';
 
 export interface AppState {
   settings: fromSettings.SettingsState;
@@ -21,4 +22,4 @@ export const effects = [
 ];
 
 // Export selectors
-export { TasksSelectors };
+export { TasksSelectors, SettingsSelectors };

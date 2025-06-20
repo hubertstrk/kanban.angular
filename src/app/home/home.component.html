@@ -4,7 +4,7 @@
     <div class="flex space-x-2">
       <app-button
         (clicked)="toggleDarkMode()"
-        [icon]="settings?.dark ? icons['fluent--weather-sunny-24-regular'] : icons['fluent--dark-theme-24-filled']">
+        [icon]="isDarkMode ? icons['fluent--weather-sunny-24-regular'] : icons['fluent--dark-theme-24-filled']">
       </app-button>
       <app-button
         (clicked)="createNewTask()"
@@ -60,6 +60,7 @@
     </div>
   </div>
 
+  <!--  new task-->
   <app-modal (closed)="closeModal()" [isOpen]="isModalOpen">
     <div modalTitle>Create New Task</div>
 
@@ -92,12 +93,10 @@
 
       <div class="flex flex-col gap-2">
         <label for="description" class="text-sm">Description</label>
-        <textarea
-          id="description"
-          [(ngModel)]="taskContent"
-          rows="6"
-          class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700 w-full"
-        ></textarea>
+        <app-monaco-editor
+          [content]="taskContent"
+          (contentChange)="taskContent = $event"
+        ></app-monaco-editor>
       </div>
 
     </div>

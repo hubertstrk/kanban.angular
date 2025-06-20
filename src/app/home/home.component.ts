@@ -2,11 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {getCurrentWebviewWindow} from '@tauri-apps/api/webviewWindow';
-import {Subject, takeUntil} from 'rxjs';
+import {Subject, take, takeUntil} from 'rxjs';
 import {IconService} from "@services/icons.service";
 import {SafeHtml} from '@angular/platform-browser';
 import {SettingsService} from '@services/settings.service';
-import {Settings} from '@models/settings.model';
 import {v4} from 'uuid';
 
 import {ButtonComponent} from '../shared/button/app-button.component';
@@ -16,12 +15,15 @@ import {TaskCardComponent} from '../shared/task-card/app-task-card.component';
 import {SectionHeaderComponent} from '../shared/section-header/app-section-header.component';
 import {DropdownComponent} from '../shared/dropdown/app-dropdown.component';
 import {DatePickerComponent} from '../shared/date-picker/app-date-picker.component';
+import {MonacoEditorComponent} from '../shared/monaco-editor/app-monaco-editor.component';
 
 import {Store} from '@ngrx/store';
 import {createTask, updateTask} from '@store/tasks/tasks.actions';
 import {selectTasksByStatus} from "@store/tasks/tasks.selectors";
 import {PriorityOptions, Task, TaskPriority, TaskStatus, TaskStatusMapping} from "@models/task.model";
 import {AppState} from "@store/index";
+import {saveSettings} from '@store/settings/settings.actions';
+import {selectDarkMode, selectSettings} from '@store/settings/settings.selectors';
 
 import {sortBy} from 'lodash-es';
 import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
@@ -31,7 +33,7 @@ const appWindow = getCurrentWebviewWindow();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent, DatePickerComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent, DatePickerComponent, MonacoEditorComponent],
   providers: [IconService],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -41,7 +43,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   progress: Task[] = [];
   done: Task[] = [];
   icons: { [key: string]: SafeHtml } = {};
-  settings: Settings | null = null;
   statusMapping = TaskStatusMapping;
   priorityOptions = PriorityOptions;
 
@@ -51,6 +52,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   taskPriority = TaskPriority.Low;
   taskDueDate: string | null = null;
 
+  isDarkMode = false;
+
+  selectSettings$ = this.store.select(selectSettings);
+  selectDarkMode$ = this.store.select(selectDarkMode);
+  selectTodos$ = this.store.select(selectTasksByStatus(TaskStatus.Todo));
+  selectProgress$ = this.store.select(selectTasksByStatus(TaskStatus.Progress));
+  selectDone$ = this.store.select(selectTasksByStatus(TaskStatus.Done));
 
   private destroy$ = new Subject<void>();
 
@@ -62,7 +70,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // load icons
     this.iconService
       .getIcons([
         'material-symbols-light--minimize-rounded',
@@ -77,28 +84,28 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.icons = icons;
       });
 
-    // Load settings
-    this.settingsService.readSettings()
+    this.selectDarkMode$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(settings => {
-        this.settings = settings;
-        this.applyTheme();
+      .subscribe((dark) => {
+        this.isDarkMode = dark;
+        this.isDarkMode
+          ? document.documentElement.classList.add('dark')
+          : document.documentElement.classList.remove('dark');
       });
 
-    // Subscribe to tasks by status
-    this.store.select(selectTasksByStatus(TaskStatus.Todo))
+    this.selectTodos$
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
         this.todos = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
       });
 
-    this.store.select(selectTasksByStatus(TaskStatus.Progress))
+    this.selectProgress$
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
         this.progress = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
       });
 
-    this.store.select(selectTasksByStatus(TaskStatus.Done))
+    this.selectDone$
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
         this.done = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
@@ -106,14 +113,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   toggleDarkMode(): void {
-    if (this.settings) {
-      this.settings.dark = !this.settings.dark;
-      this.settingsService.saveSettings(this.settings)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(() => {
-          this.applyTheme();
-        });
-    }
+    this.selectSettings$.pipe(take(1)).subscribe((settings) => {
+      const updateSettings = {
+        ...settings,
+        dark: !settings.dark
+      }
+      console.log('Updating settings:', updateSettings.dark);
+      this.store.dispatch(saveSettings({settings: updateSettings}));
+    })
   }
 
   createNewTask(): void {
@@ -133,33 +140,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   saveTask(): void {
-    try {
-      this.store.dispatch(createTask({
-        task: {
-          id: v4(),
-          title: this.taskName,
-          content: this.taskContent,
-          status: TaskStatus.Todo,
-          createdAt: new Date().toISOString(),
-          dueAt: this.taskDueDate,
-          priority: this.taskPriority
-        }
-      }))
+    this.store.dispatch(createTask({
+      task: {
+        id: v4(),
+        title: this.taskName,
+        content: this.taskContent,
+        status: TaskStatus.Todo,
+        createdAt: new Date().toISOString(),
+        dueAt: this.taskDueDate,
+        priority: this.taskPriority
+      }
+    }))
 
-      this.closeModal();
-    } catch (error) {
-      console.error('Error saving task:', error);
-    }
+    this.closeModal();
   }
 
   getColumnClass(): string {
     return 'bg-gray-50 dark:bg-zinc-700 py-4 rounded-lg flex flex-col max-h-full overflow-y-auto';
-  }
-
-  private applyTheme(): void {
-    this.settings?.dark
-      ? document.documentElement.classList.add('dark')
-      : document.documentElement.classList.remove('dark');
   }
 
   closeModal(): void {

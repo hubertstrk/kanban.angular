@@ -1,8 +1,8 @@
 <div class="flex bg-white dark:bg-zinc-600 rounded-lg mb-2 shadow-sm"
-     (dblclick)="onEditTask()">
+     (dblclick)="onOpenViewModal()">
   <div [ngClass]="getPriorityClass()"></div>
-  <div class="p-3 flex flex-col">
-    <div class="flex">
+  <div class="p-3 flex flex-col w-full">
+    <div class="flex justify-between">
       <div class="flex flex-col">
         <div [ngClass]="getTitleClass()">{{ task.title }}</div>
         <div
@@ -12,21 +12,39 @@
           <span *ngIf="!isOverdue()">{{ task.dueAt | dueDate }} left</span>
         </div>
       </div>
-      <app-button
-        *ngIf="task.status === 'done'"
-        (clicked)="onDeleteTask()"
-        [size]="'sm'"
-        [icon]="icons['fluent--delete-24-regular']">
-      </app-button>
+      <div class="flex">
+        <app-button
+          (clicked)="onOpenEditModal()"
+          [size]="'sm'"
+          [icon]="icons['fluent--note-24-regular']">
+        </app-button>
+        <app-button
+          *ngIf="task.status === 'done'"
+          (clicked)="onDeleteTask()"
+          [size]="'sm'"
+          [icon]="icons['fluent--delete-24-regular']">
+        </app-button>
+      </div>
     </div>
 
-    <div class="text-sm text-zinc-600 dark:text-zinc-300" (mousedown)="onTextMouseDown($event)"
-    >{{ getTaskContent(task.content) }}
+    <div class="text-sm text-zinc-600 dark:text-zinc-300">{{ getTaskContent(task.content) }}
     </div>
   </div>
 </div>
 
-<app-modal [isOpen]="isModalOpen" (closed)="closeModal()">
+<!-- view -->
+<app-modal [isOpen]="isViewModalOpen" (closed)="closeModal()">
+  <div modalTitle>{{ task.title }}</div>
+
+  <div class="flex flex-col">
+    <div>{{ task.title }}</div>
+    <div *ngIf="task.dueAt">{{ task.dueAt | date:'medium' }}</div>
+    <div [innerHTML]="getRenderedContent()"></div>
+  </div>
+</app-modal>
+
+<!-- edit -->
+<app-modal [isOpen]="isEditModalOpen" (closed)="closeModal()">
   <div modalTitle>Edit Task</div>
 
   <div class="flex flex-col gap-4">
@@ -61,13 +79,11 @@
 
     <div class="flex flex-col gap-2">
       <label for="taskContent" class="text-sm">Description</label>
-      <textarea
+      <app-monaco-editor
         id="taskContent"
-        [(ngModel)]="editedTask.content"
-        rows="6"
-        class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700"
-        (mousedown)="onTextMouseDown($event)"
-      ></textarea>
+        [content]="editedTask.content || ''"
+        (contentChange)="editedTask.content = $event"
+      ></app-monaco-editor>
     </div>
   </div>
 
