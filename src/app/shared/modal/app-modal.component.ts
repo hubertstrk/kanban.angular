@@ -59,7 +59,7 @@ export class ModalComponent implements OnInit {
 
   get modalClasses(): string {
     return `
-      fixed inset-0 z-50 flex items-center justify-center overflow-y-auto transition-opacity duration-300
+      fixed z-50 inset-0 flex items-center justify-center
       ${this.isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
     `;
   }
@@ -67,7 +67,7 @@ export class ModalComponent implements OnInit {
   get contentClasses(): string {
     return `
       bg-white dark:bg-zinc-800 text-black dark:text-neutral-100 rounded-lg shadow-xl transform transition-all duration-500
-      w-4/5 md:w-1/2 mx-auto
+      w-1/2 h-[80vh] mx-auto flex flex-col overflow-hidden
       ${this.isOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}
     `;
   }

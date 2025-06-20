@@ -1,11 +1,14 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {FormsModule} from "@angular/forms";
+
 import * as monaco from 'monaco-editor';
 import {Subject, takeUntil} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {AppState, SettingsSelectors} from '@store/index';
 import {MonacoEditorModule} from 'ngx-monaco-editor-v2';
-import {FormsModule} from "@angular/forms";
+
+import {AppState, SettingsSelectors} from '@store/index';
+
 import {editorOptions} from './monaco-options';
 
 @Component({

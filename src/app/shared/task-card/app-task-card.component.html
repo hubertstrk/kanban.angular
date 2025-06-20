@@ -55,9 +55,8 @@
 
   <div class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
-      <label for="taskTitle" class="text-sm font-medium">Title</label>
+      <label class="text-sm font-medium">Title</label>
       <input
-        id="taskTitle"
         type="text"
         [(ngModel)]="editedTask.title"
         class="border border-gray-300 dark:border-gray-600 rounded-md p-2 dark:bg-zinc-700"
@@ -86,7 +85,6 @@
     <div class="flex flex-col gap-2">
       <label class="text-sm">Description</label>
       <app-monaco-editor
-        id="taskContent"
         [content]="editedTask.content || ''"
         (contentChange)="editedTask.content = $event"
       ></app-monaco-editor>

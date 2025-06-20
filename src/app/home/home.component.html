@@ -94,6 +94,7 @@
       <div class="flex flex-col gap-2">
         <label class="text-sm">Description</label>
         <app-monaco-editor
+          class="flex h-full w-full"
           [content]="taskContent"
           (contentChange)="taskContent = $event"
         ></app-monaco-editor>

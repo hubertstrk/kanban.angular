@@ -1,12 +1,25 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {SafeHtml} from '@angular/platform-browser';
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
+
 import {getCurrentWebviewWindow} from '@tauri-apps/api/webviewWindow';
 import {Subject, take, takeUntil} from 'rxjs';
-import {IconService} from "@services/icons.service";
-import {SafeHtml} from '@angular/platform-browser';
-import {SettingsService} from '@services/settings.service';
+import {Store} from '@ngrx/store';
+import {sortBy} from 'lodash-es';
 import {v4} from 'uuid';
+
+import {AppState} from "@store/index";
+import {createTask, updateTask} from '@store/tasks/tasks.actions';
+import {selectTasksByStatus} from "@store/tasks/tasks.selectors";
+import {saveSettings} from '@store/settings/settings.actions';
+import {selectDarkMode, selectSettings} from '@store/settings/settings.selectors';
+
+import {PriorityOptions, Task, TaskPriority, TaskStatus, TaskStatusMapping} from "@models/task.model";
+
+import {IconService} from "@services/icons.service";
+import {SettingsService} from '@services/settings.service';
 
 import {ButtonComponent} from '../shared/button/app-button.component';
 import {ModalComponent} from '../shared/modal/app-modal.component';
@@ -16,17 +29,6 @@ import {SectionHeaderComponent} from '../shared/section-header/app-section-heade
 import {DropdownComponent} from '../shared/dropdown/app-dropdown.component';
 import {DatePickerComponent} from '../shared/date-picker/app-date-picker.component';
 import {MonacoEditorComponent} from '../shared/monaco-editor/app-monaco-editor.component';
-
-import {Store} from '@ngrx/store';
-import {createTask, updateTask} from '@store/tasks/tasks.actions';
-import {selectTasksByStatus} from "@store/tasks/tasks.selectors";
-import {PriorityOptions, Task, TaskPriority, TaskStatus, TaskStatusMapping} from "@models/task.model";
-import {AppState} from "@store/index";
-import {saveSettings} from '@store/settings/settings.actions';
-import {selectDarkMode, selectSettings} from '@store/settings/settings.selectors';
-
-import {sortBy} from 'lodash-es';
-import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
 
 const appWindow = getCurrentWebviewWindow();
 

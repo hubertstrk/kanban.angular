@@ -1,20 +1,26 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PriorityOptions, Task, TaskPriority} from '@models/task.model';
-import {Store} from '@ngrx/store';
-import {deleteTask, updateTask} from '@store/tasks/tasks.actions';
-import {ButtonComponent} from '../button/app-button.component';
-import {IconService} from "@services/icons.service";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
-import {Subject, takeUntil} from "rxjs";
-import {ModalComponent} from '../modal/app-modal.component';
 import {FormsModule} from '@angular/forms';
-import {DropdownComponent} from '../dropdown/app-dropdown.component';
-import {DatePickerComponent} from '../date-picker/app-date-picker.component';
-import {DueDatePipe} from './due-date.pipe';
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+
 import {marked} from 'marked';
-import {MonacoEditorComponent} from '../monaco-editor/app-monaco-editor.component';
 import DOMPurify from 'dompurify';
+import {Store} from '@ngrx/store';
+import {Subject, takeUntil} from "rxjs";
+
+import {deleteTask, updateTask} from '@store/tasks/tasks.actions';
+
+import {PriorityOptions, Task, TaskPriority} from '@models/task.model';
+
+import {IconService} from "@services/icons.service";
+
+import {ButtonComponent} from '@app/shared/button/app-button.component';
+import {ModalComponent} from '@app/shared/modal/app-modal.component';
+import {DropdownComponent} from '@app/shared/dropdown/app-dropdown.component';
+import {DatePickerComponent} from '@app/shared/date-picker/app-date-picker.component';
+import {MonacoEditorComponent} from '@app/shared/monaco-editor/app-monaco-editor.component';
+import {DueDatePipe} from '@app/shared/task-card/due-date.pipe';
+
 
 @Component({
   selector: 'app-task-card',
@@ -30,17 +36,15 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   isViewModalOpen = false;
   editedTask: Partial<Task> = {};
   priorityOptions = PriorityOptions;
-
-  protected readonly TaskPriority = TaskPriority;
-
   destroy$ = new Subject<void>();
+  protected readonly TaskPriority = TaskPriority;
 
   constructor(private store: Store, private iconsService: IconService, private sanitizer: DomSanitizer) {
   }
 
   getRenderedContent(): SafeHtml {
     if (!this.task.content) return '';
-    
+
     const html = marked(this.task.content) as string;
     const sanitizedHtml = DOMPurify.sanitize(html);
     return this.sanitizer.bypassSecurityTrustHtml(sanitizedHtml);
