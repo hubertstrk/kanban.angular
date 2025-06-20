@@ -1,4 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 /* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-primary: #4f46e5;
+  --color-secondary: #22c55e;
+  --color-danger: #ef4444;
+  --color-background: #ffffff;
+  --color-text: #1f2937;
+  --color-border: #e5e7eb;
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+/* Scrollbar styling for light mode */
+::-webkit-scrollbar {
+  width: 15px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Dark mode scrollbar styling */
+.dark ::-webkit-scrollbar-track {
+  background: #27272a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}

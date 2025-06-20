@@ -55,7 +55,7 @@
 
   <div class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
-      <label class="text-sm font-medium">Title</label>
+      <div class="text-sm">Title</div>
       <input
         type="text"
         [(ngModel)]="editedTask.title"
@@ -64,7 +64,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="text-sm">Priority</label>
+      <div class="text-sm">Priority</div>
       <app-dropdown
         id="taskPriority"
         [options]="priorityOptions"
@@ -74,7 +74,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="text-sm">Due Date</label>
+      <div class="text-sm">Due Date</div>
       <app-date-picker
         id="taskDueDate"
         [date]="editedTask.dueAt ?? null"
@@ -83,7 +83,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="text-sm">Description</label>
+      <div class="text-sm">Description</div>
       <app-monaco-editor
         [content]="editedTask.content || ''"
         (contentChange)="editedTask.content = $event"
