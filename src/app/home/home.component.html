@@ -1,4 +1,4 @@
-<div class="w-full h-screen flex flex-col bg-white dark:bg-zinc-800 text-black dark:text-neutral-100 overflow-hidden">
+<div class="flex flex-col w-full h-screen bg-white dark:bg-zinc-800 text-black dark:text-neutral-100 overflow-hidden">
   <div class="flex items-center justify-between px-5 py-3" data-tauri-drag-region>
     <h1 class="uppercase text-2xl">Tasks</h1>
     <div class="flex space-x-2">
@@ -59,56 +59,54 @@
       </div>
     </div>
   </div>
-
-  <!--  new task-->
-  <app-modal (closed)="closeModal()" [isOpen]="isModalOpen">
-    <div modalTitle>Create New Task</div>
-
-    <div class="space-y-4">
-
-      <app-text-input
-        [(ngModel)]="taskName"
-        [required]="true"
-        label="Title">
-      </app-text-input>
-
-      <div class="flex flex-col gap-2">
-        <div class="text-sm">Priority</div>
-        <app-dropdown
-          id="taskPriority"
-          [options]="priorityOptions"
-          [selectedValue]="taskPriority"
-          (selectionChange)="onPriorityChange($event)"
-        ></app-dropdown>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <div class="text-sm">Due Date</div>
-        <app-date-picker
-          id="taskDueDate"
-          [date]="taskDueDate"
-          (dateChange)="onDueDateChange($event)"
-        ></app-date-picker>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <div class="text-sm">Description</div>
-        <app-monaco-editor
-          class="flex h-full w-full"
-          [content]="taskContent"
-          (contentChange)="taskContent = $event"
-        ></app-monaco-editor>
-      </div>
-
-    </div>
-
-    <div class="flex space-x-2" modalFooter>
-      <app-button (clicked)="closeModal()" [rounded]="false" variant="transparent">
-        <span class="px-2">Cancel</span>
-      </app-button>
-      <app-button (clicked)="saveTask()" [rounded]="false" variant="secondary">
-        <span class="px-2">Save</span>
-      </app-button>
-    </div>
-  </app-modal>
 </div>
+
+<app-modal class="flex h-full flex-1" *ngIf="isModalOpen" (closed)="closeModal()" [isOpen]="isModalOpen">
+  <div modalTitle>Create New Task</div>
+
+  <div class="space-y-4">
+
+    <app-text-input
+      [(ngModel)]="taskName"
+      [required]="true"
+      label="Title">
+    </app-text-input>
+
+    <div class="flex flex-col gap-2">
+      <div class="text-sm">Priority</div>
+      <app-dropdown
+        id="taskPriority"
+        [options]="priorityOptions"
+        [selectedValue]="taskPriority"
+        (selectionChange)="onPriorityChange($event)"
+      ></app-dropdown>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <div class="text-sm">Due Date</div>
+      <app-date-picker
+        id="taskDueDate"
+        [date]="taskDueDate"
+        (dateChange)="onDueDateChange($event)"
+      ></app-date-picker>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <div class="text-sm">Description</div>
+      <app-monaco-editor
+        class="flex h-full w-full"
+        [content]="taskContent"
+        (contentChange)="taskContent = $event"
+      ></app-monaco-editor>
+    </div>
+  </div>
+
+  <div class="flex space-x-2" modalFooter>
+    <app-button (clicked)="closeModal()" [rounded]="false" variant="transparent">
+      <span class="px-2">Cancel</span>
+    </app-button>
+    <app-button (clicked)="saveTask()" [rounded]="false" variant="secondary">
+      <span class="px-2">Save</span>
+    </app-button>
+  </div>
+</app-modal>

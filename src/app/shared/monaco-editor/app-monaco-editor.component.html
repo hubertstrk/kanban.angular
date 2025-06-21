@@ -1,9 +1,10 @@
-<div #editorContainer class="h-full w-full flex">
+<div #editorContainer class="flex flex-1 h-full w-full">
   <ngx-monaco-editor
+    style="height: 300px;"
+    class="flex flex-1 w-full"
     (ngModelChange)="onTextChange($event)"
     (onInit)="onEditorInit($event)"
     [ngModel]="content"
-    [options]="editorOptions"
-    class="flex-1 h-full w-full">
+    [options]="currentEditorOptions">
   </ngx-monaco-editor>
 </div>

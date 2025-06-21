@@ -1,7 +1,7 @@
 import * as monaco from 'monaco-editor';
 
 export const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
-  theme: document.body.classList.contains('dark') ? 'vs-dark' : 'vs-light',
+  theme: 'vs-dark',
   language: 'markdown',
   mouseWheelZoom: true,
   wordWrap: 'on',
@@ -16,13 +16,12 @@ export const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
   lineNumbers: 'off',
   minimap: {enabled: false},
   scrollbar: {
-    vertical: 'hidden',
     horizontal: 'hidden',
     alwaysConsumeMouseWheel: false
   },
   contextmenu: false,
   fontSize: 14,
-  fontFamily: 'Fira Code, monospace',
+  fontFamily: 'monospace',
   glyphMargin: false,
   folding: false,
   fixedOverflowWidgets: true,
