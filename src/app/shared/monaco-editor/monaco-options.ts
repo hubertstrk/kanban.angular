@@ -15,6 +15,14 @@ export const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
   cursorSmoothCaretAnimation: 'on',
   lineNumbers: 'off',
   minimap: {enabled: false},
+  suggest: {
+    showIcons: false,
+    showStatusBar: false,
+    showInlineDetails: false,
+    filterGraceful: true,
+    preview: false,
+    snippetsPreventQuickSuggestions: false,
+  },
   scrollbar: {
     horizontal: 'hidden',
     alwaysConsumeMouseWheel: false
