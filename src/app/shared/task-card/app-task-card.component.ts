@@ -47,10 +47,6 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  onOpenViewModal(): void {
-    this.isViewModalOpen = true;
-  }
-
   onOpenEditModal(): void {
     this.editedTask = {
       title: this.task.title,
@@ -59,11 +55,6 @@ export class TaskCardComponent implements OnInit, OnDestroy {
       dueAt: this.task.dueAt
     };
     this.isEditModalOpen = true;
-  }
-
-  closeModal(): void {
-    this.isEditModalOpen = false;
-    this.isViewModalOpen = false;
   }
 
   onPriorityChange(priority: string): void {
@@ -107,7 +98,7 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     };
 
     this.store.dispatch(updateTask({task: updatedTask}));
-    this.closeModal();
+    this.isEditModalOpen = false;
   }
 
   onDeleteTask(): void {

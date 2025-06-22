@@ -1,5 +1,5 @@
 <div class="flex bg-white dark:bg-zinc-600 rounded-lg mb-2 shadow-sm"
-     (dblclick)="onOpenViewModal()">
+     (dblclick)="isViewModalOpen = true">
   <div [ngClass]="getPriorityClass()"></div>
   <div class="p-3 flex flex-col w-full">
     <div class="flex justify-between">
@@ -22,16 +22,17 @@
       </div>
     </div>
 
-    <div class="mt-[6px] text-sm text-zinc-600 dark:text-zinc-300">{{ getTaskContent(task.content) }}
-    </div>
+    <!--    <div class="mt-[6px] text-sm text-zinc-600 dark:text-zinc-300">{{ getTaskContent(task.content) }}-->
+    <!--    <div class="mt-[6px] text-sm text-zinc-600 dark:text-zinc-300 prose dark:prose-invert max-w-none"-->
+    <!--         [innerHtml]="getTaskContentHtml(task.content)"></div>-->
   </div>
 </div>
 
 <!-- view -->
-<app-task-view [task]="task" [isOpen]="isViewModalOpen"></app-task-view>
+<app-task-view [task]="task" [isOpen]="isViewModalOpen" (closed)="isViewModalOpen = false"></app-task-view>
 
 <!-- edit -->
-<app-modal *ngIf="isEditModalOpen" [isOpen]="isEditModalOpen" (closed)="closeModal()">
+<app-modal *ngIf="isEditModalOpen" [isOpen]="isEditModalOpen" (closed)="isEditModalOpen = false">
   <div modalTitle>Edit Task</div>
 
   <div class="flex flex-col gap-4 h-full">
@@ -73,7 +74,7 @@
   </div>
 
   <div modalFooter class="flex gap-2">
-    <app-button (clicked)="closeModal()" [rounded]="false">
+    <app-button (clicked)="isEditModalOpen = false" [rounded]="false">
       <span class="px-2">Cancel</span>
     </app-button>
     <app-button (clicked)="saveTask()" [variant]="'secondary'" [rounded]="false">

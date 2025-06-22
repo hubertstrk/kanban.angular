@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgIf} from '@angular/common';
 
 import {Task} from "@models/task.model";
@@ -19,9 +19,11 @@ export class TaskViewComponent {
   @Input() task!: Task;
   @Input() isOpen: boolean = false;
 
+  @Output() closed: EventEmitter<any> = new EventEmitter();
+
   constructor(private sanitizer: DomSanitizer) {
   }
-
+  
   getRenderedContent(): SafeHtml {
     if (!this.task.content) return '';
 
@@ -32,5 +34,6 @@ export class TaskViewComponent {
 
   closeModal() {
     this.isOpen = false;
+    this.closed.emit();
   }
 }
