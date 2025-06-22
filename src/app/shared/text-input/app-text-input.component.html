@@ -1,10 +1,8 @@
 <div [ngClass]="containerClasses">
-  <!-- Label -->
   <label *ngIf="label" [for]="'input-' + label" [ngClass]="labelClasses">
     {{ label }}
   </label>
 
-  <!-- Input -->
   <input
     [type]="type"
     [id]="'input-' + label"
@@ -18,7 +16,6 @@
     (blur)="onBlur()"
   />
 
-  <!-- Helper Text or Error Message -->
   <div *ngIf="helperText || errorMessage" [ngClass]="helperTextClasses">
     {{ errorMessage || helperText }}
   </div>

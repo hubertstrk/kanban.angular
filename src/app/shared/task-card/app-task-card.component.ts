@@ -18,13 +18,13 @@ import {DropdownComponent} from '@app/shared/dropdown/app-dropdown.component';
 import {DatePickerComponent} from '@app/shared/date-picker/app-date-picker.component';
 import {MonacoEditorComponent} from '@app/shared/monaco-editor/app-monaco-editor.component';
 import {TaskViewComponent} from "@app/shared/task-view/task-view.component";
-import {DueDateComponent} from "@app/shared/due-date-display/due-date.component";
-import {TaskTitleComponent} from "@app/shared/task-title-display/task-title-display.component";
+import {AppDueDateComponent} from "@app/shared/task-due-date-display/app-due-date.component";
+import {TaskTitleComponent} from "@app/shared/task-title-display/app-task-title-display.component";
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, MonacoEditorComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, TaskViewComponent, DueDateComponent, TaskTitleComponent],
+  imports: [CommonModule, ButtonComponent, MonacoEditorComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, TaskViewComponent, AppDueDateComponent, TaskTitleComponent],
   templateUrl: './app-task-card.component.html',
 })
 export class TaskCardComponent implements OnInit, OnDestroy {
@@ -41,9 +41,10 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   constructor(private store: Store, private iconsService: IconService) {
   }
 
-
-  onDeleteTask(): void {
-    this.store.dispatch(deleteTask({id: this.task.id}));
+  ngOnInit(): void {
+    this.iconsService.getIcons(['fluent--delete-24-regular', 'fluent--note-24-regular']).pipe(takeUntil(this.destroy$)).subscribe(icons => {
+      this.icons = icons;
+    });
   }
 
   onOpenViewModal(): void {
@@ -63,19 +64,6 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   closeModal(): void {
     this.isEditModalOpen = false;
     this.isViewModalOpen = false;
-  }
-
-  saveTask(): void {
-    const updatedTask: Task = {
-      ...this.task,
-      title: this.editedTask.title || '',
-      content: this.editedTask.content || '',
-      priority: this.editedTask.priority || TaskPriority.Medium,
-      dueAt: this.editedTask.dueAt || null,
-    };
-
-    this.store.dispatch(updateTask({task: updatedTask}));
-    this.closeModal();
   }
 
   onPriorityChange(priority: string): void {
@@ -109,10 +97,21 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     return `${base} ${getPriorityClass(this.task.priority || TaskPriority.Medium)}`;
   }
 
-  ngOnInit(): void {
-    this.iconsService.getIcons(['fluent--delete-24-regular', 'fluent--note-24-regular']).pipe(takeUntil(this.destroy$)).subscribe(icons => {
-      this.icons = icons;
-    });
+  saveTask(): void {
+    const updatedTask: Task = {
+      ...this.task,
+      title: this.editedTask.title || '',
+      content: this.editedTask.content || '',
+      priority: this.editedTask.priority || TaskPriority.Medium,
+      dueAt: this.editedTask.dueAt || null,
+    };
+
+    this.store.dispatch(updateTask({task: updatedTask}));
+    this.closeModal();
+  }
+
+  onDeleteTask(): void {
+    this.store.dispatch(deleteTask({id: this.task.id}));
   }
 
   ngOnDestroy(): void {

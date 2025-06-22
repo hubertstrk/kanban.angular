@@ -5,15 +5,11 @@ import {NgClass, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-due-date',
-  templateUrl: 'due-date.component.html',
+  templateUrl: 'app-due-date.component.html',
   standalone: true,
-  imports: [
-    DueDatePipe,
-    NgIf,
-    NgClass
-  ]
+  imports: [DueDatePipe, NgIf, NgClass]
 })
-export class DueDateComponent {
+export class AppDueDateComponent {
 
   @Input() task!: Task;
 

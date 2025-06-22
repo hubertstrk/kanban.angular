@@ -4,7 +4,7 @@ import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-task-title-display',
-  templateUrl: 'task-title-display.component.html',
+  templateUrl: 'app-task-title-display.component.html',
   standalone: true,
   imports: [NgClass]
 })

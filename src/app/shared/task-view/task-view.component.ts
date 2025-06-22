@@ -7,17 +7,13 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 import {marked} from "marked";
 import DOMPurify from "dompurify";
 
-import {DueDateComponent} from "@app/shared/due-date-display/due-date.component";
+import {AppDueDateComponent} from "@app/shared/task-due-date-display/app-due-date.component";
 
 @Component({
   selector: 'app-task-view',
   templateUrl: 'task-view.component.html',
   standalone: true,
-  imports: [
-    ModalComponent,
-    DueDateComponent,
-    NgIf
-  ]
+  imports: [ModalComponent, AppDueDateComponent, NgIf]
 })
 export class TaskViewComponent {
   @Input() task!: Task;
