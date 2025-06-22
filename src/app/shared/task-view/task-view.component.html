@@ -1,12 +1,7 @@
 <app-modal *ngIf="task" [isOpen]="isOpen" (closed)="closeModal()">
   <div modalTitle class="flex flex-col gap-2">
     <div class="text-2xl">{{ task.title }}</div>
-    <div
-      *ngIf="task.dueAt"
-      [ngClass]="getDueClass()">
-      <span *ngIf="isOverdue()">{{ task.dueAt | dueDate }} overdue</span>
-      <span *ngIf="!isOverdue()">{{ task.dueAt | dueDate }} left</span>
-    </div>
+    <app-due-date [task]="task"></app-due-date>
   </div>
 
   <div class="mt-[10px] prose dark:prose-invert max-w-none" [innerHTML]="getRenderedContent()"></div>

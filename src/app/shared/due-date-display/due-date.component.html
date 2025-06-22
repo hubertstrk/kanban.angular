@@ -1,0 +1,6 @@
+<div
+  *ngIf="task.dueAt"
+  [ngClass]="getDueClass()">
+  <span *ngIf="isOverdue()">{{ task.dueAt | dueDate }} overdue</span>
+  <span *ngIf="!isOverdue()">{{ task.dueAt | dueDate }} left</span>
+</div>

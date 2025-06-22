@@ -17,13 +17,14 @@ import {ModalComponent} from '@app/shared/modal/app-modal.component';
 import {DropdownComponent} from '@app/shared/dropdown/app-dropdown.component';
 import {DatePickerComponent} from '@app/shared/date-picker/app-date-picker.component';
 import {MonacoEditorComponent} from '@app/shared/monaco-editor/app-monaco-editor.component';
-import {DueDatePipe} from '@app/shared/task-card/due-date.pipe';
 import {TaskViewComponent} from "@app/shared/task-view/task-view.component";
+import {DueDateComponent} from "@app/shared/due-date-display/due-date.component";
+import {TaskTitleComponent} from "@app/shared/task-title-display/task-title-display.component";
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, MonacoEditorComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, DueDatePipe, TaskViewComponent],
+  imports: [CommonModule, ButtonComponent, MonacoEditorComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, TaskViewComponent, DueDateComponent, TaskTitleComponent],
   templateUrl: './app-task-card.component.html',
 })
 export class TaskCardComponent implements OnInit, OnDestroy {
@@ -77,32 +78,12 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.closeModal();
   }
 
-  isOverdue(): boolean {
-    if (!this.task.dueAt) return false;
-
-    const now = new Date();
-    const dueDate = new Date(this.task.dueAt);
-    return dueDate.getTime() - now.getTime() < 0;
-  }
-
-  getDueClass(): string {
-    const doneClass = this.task.status === 'done' ? 'line-through' : '';
-    const overdueClass = this.isOverdue() ? 'text-red-500' : 'text-zinc-400 dark:text-neutral-300';
-    return `text-sm ${doneClass} ${overdueClass}`;
-  }
-
   onPriorityChange(priority: string): void {
     this.editedTask.priority = priority as TaskPriority;
   }
 
   onDueDateChange(date: string): void {
     this.editedTask.dueAt = date;
-  }
-
-  getTitleClass(): string {
-    const base = 'text-lg text-zinc-500 dark:text-neutral-100';
-    const doneClass = this.task.status === 'done' ? 'line-through' : '';
-    return `${base} ${doneClass}`;
   }
 
   getTaskContent(content: string): string {
