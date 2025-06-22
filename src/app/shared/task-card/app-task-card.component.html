@@ -33,19 +33,7 @@
 </div>
 
 <!-- view -->
-<app-modal [isOpen]="isViewModalOpen" (closed)="closeModal()">
-  <div modalTitle class="flex flex-col gap-2">
-    <div class="text-2xl">{{ task.title }}</div>
-    <div
-      *ngIf="task.dueAt"
-      [ngClass]="getDueClass()">
-      <span *ngIf="isOverdue()">{{ task.dueAt | dueDate }} overdue</span>
-      <span *ngIf="!isOverdue()">{{ task.dueAt | dueDate }} left</span>
-    </div>
-  </div>
-
-  <div class="mt-[10px] prose dark:prose-invert max-w-none" [innerHTML]="getRenderedContent()"></div>
-</app-modal>
+<app-task-view [task]="task" [isOpen]="isViewModalOpen"></app-task-view>
 
 <!-- edit -->
 <app-modal *ngIf="isEditModalOpen" [isOpen]="isEditModalOpen" (closed)="closeModal()">

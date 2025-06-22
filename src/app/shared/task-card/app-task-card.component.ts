@@ -1,10 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {SafeHtml} from "@angular/platform-browser";
 
-import {marked} from 'marked';
-import DOMPurify from 'dompurify';
 import {Store} from '@ngrx/store';
 import {Subject, takeUntil} from "rxjs";
 
@@ -20,12 +18,12 @@ import {DropdownComponent} from '@app/shared/dropdown/app-dropdown.component';
 import {DatePickerComponent} from '@app/shared/date-picker/app-date-picker.component';
 import {MonacoEditorComponent} from '@app/shared/monaco-editor/app-monaco-editor.component';
 import {DueDatePipe} from '@app/shared/task-card/due-date.pipe';
-
+import {TaskViewComponent} from "@app/shared/task-view/task-view.component";
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, MonacoEditorComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, DueDatePipe],
+  imports: [CommonModule, ButtonComponent, MonacoEditorComponent, ModalComponent, FormsModule, DropdownComponent, DatePickerComponent, DueDatePipe, TaskViewComponent],
   templateUrl: './app-task-card.component.html',
 })
 export class TaskCardComponent implements OnInit, OnDestroy {
@@ -39,16 +37,9 @@ export class TaskCardComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   protected readonly TaskPriority = TaskPriority;
 
-  constructor(private store: Store, private iconsService: IconService, private sanitizer: DomSanitizer) {
+  constructor(private store: Store, private iconsService: IconService) {
   }
 
-  getRenderedContent(): SafeHtml {
-    if (!this.task.content) return '';
-
-    const html = marked(this.task.content) as string;
-    const sanitizedHtml = DOMPurify.sanitize(html);
-    return this.sanitizer.bypassSecurityTrustHtml(sanitizedHtml);
-  }
 
   onDeleteTask(): void {
     this.store.dispatch(deleteTask({id: this.task.id}));
@@ -86,14 +77,6 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     this.closeModal();
   }
 
-  onPriorityChange(priority: string): void {
-    this.editedTask.priority = priority as TaskPriority;
-  }
-
-  onDueDateChange(date: string): void {
-    this.editedTask.dueAt = date;
-  }
-
   isOverdue(): boolean {
     if (!this.task.dueAt) return false;
 
@@ -102,16 +85,24 @@ export class TaskCardComponent implements OnInit, OnDestroy {
     return dueDate.getTime() - now.getTime() < 0;
   }
 
-  getTitleClass(): string {
-    const base = 'text-lg text-zinc-500 dark:text-neutral-100';
-    const doneClass = this.task.status === 'done' ? 'line-through' : '';
-    return `${base} ${doneClass}`;
-  }
-
   getDueClass(): string {
     const doneClass = this.task.status === 'done' ? 'line-through' : '';
     const overdueClass = this.isOverdue() ? 'text-red-500' : 'text-zinc-400 dark:text-neutral-300';
     return `text-sm ${doneClass} ${overdueClass}`;
+  }
+
+  onPriorityChange(priority: string): void {
+    this.editedTask.priority = priority as TaskPriority;
+  }
+
+  onDueDateChange(date: string): void {
+    this.editedTask.dueAt = date;
+  }
+
+  getTitleClass(): string {
+    const base = 'text-lg text-zinc-500 dark:text-neutral-100';
+    const doneClass = this.task.status === 'done' ? 'line-through' : '';
+    return `${base} ${doneClass}`;
   }
 
   getTaskContent(content: string): string {
