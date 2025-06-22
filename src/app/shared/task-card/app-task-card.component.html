@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="text-sm text-zinc-600 dark:text-zinc-300">{{ getTaskContent(task.content) }}
+    <div class="mt-[6px] text-sm text-zinc-600 dark:text-zinc-300">{{ getTaskContent(task.content) }}
     </div>
   </div>
 </div>
@@ -35,7 +35,7 @@
 <!-- view -->
 <app-modal [isOpen]="isViewModalOpen" (closed)="closeModal()">
   <div modalTitle class="flex flex-col gap-2">
-    <div class="text-lg">{{ task.title }}</div>
+    <div class="text-2xl">{{ task.title }}</div>
     <div
       *ngIf="task.dueAt"
       [ngClass]="getDueClass()">
@@ -44,9 +44,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col">
-    <div class="prose dark:prose-invert max-w-none" [innerHTML]="getRenderedContent()"></div>
-  </div>
+  <div class="mt-[10px] prose dark:prose-invert max-w-none" [innerHTML]="getRenderedContent()"></div>
 </app-modal>
 
 <!-- edit -->
