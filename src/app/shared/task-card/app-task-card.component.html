@@ -14,17 +14,13 @@
           [icon]="icons['fluent--note-24-regular']">
         </app-button>
         <app-button
-          *ngIf="task.status === 'done'"
+          *ngIf="task.status === TaskStatus.Done"
           (clicked)="onDeleteTask()"
           [size]="'sm'"
           [icon]="icons['fluent--delete-24-regular']">
         </app-button>
       </div>
     </div>
-
-    <!--    <div class="mt-[6px] text-sm text-zinc-600 dark:text-zinc-300">{{ getTaskContent(task.content) }}-->
-    <!--    <div class="mt-[6px] text-sm text-zinc-600 dark:text-zinc-300 prose dark:prose-invert max-w-none"-->
-    <!--         [innerHtml]="getTaskContentHtml(task.content)"></div>-->
   </div>
 </div>
 

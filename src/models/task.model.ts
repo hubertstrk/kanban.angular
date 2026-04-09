@@ -20,6 +20,7 @@ export interface Task {
   dueAt: string | null;
   status: TaskStatus;
   priority?: TaskPriority;
+  position: number;
 }
 
 export const TaskStatusMapping: Record<string, TaskStatus> = {

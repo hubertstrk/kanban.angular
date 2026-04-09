@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {SafeHtml} from '@angular/platform-browser';
-import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray} from "@angular/cdk/drag-drop";
 
 import {getCurrentWebviewWindow} from '@tauri-apps/api/webviewWindow';
 import {Subject, take, takeUntil} from 'rxjs';
@@ -98,20 +98,42 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.selectTodos$
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.todos = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
+        const sorted = sortBy(tasks, ['position', 'createdAt']);
+        this.todos = sorted;
+        this.normalizePositions(sorted);
       });
 
     this.selectProgress$
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.progress = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
+        const sorted = sortBy(tasks, ['position', 'createdAt']);
+        this.progress = sorted;
+        this.normalizePositions(sorted);
       });
 
     this.selectDone$
       .pipe(takeUntil(this.destroy$))
       .subscribe(tasks => {
-        this.done = sortBy(tasks, ['dueAt', 'title'], ['desc', 'asc']);
+        const sorted = sortBy(tasks, ['position', 'createdAt']);
+        this.done = sorted;
+        this.normalizePositions(sorted);
       });
+  }
+
+  private normalizePositions(tasks: Task[]): void {
+    const needsUpdate = tasks.some(task =>
+      task.position === undefined || task.position === null || isNaN(task.position)
+    );
+
+    if (needsUpdate) {
+      tasks.forEach((task, index) => {
+        const newPosition = (index + 1) * 1024;
+        if (task.position !== newPosition) {
+          const updatedTask = {...task, position: newPosition};
+          this.store.dispatch(updateTask({task: updatedTask}));
+        }
+      });
+    }
   }
 
   toggleDarkMode(): void {
@@ -141,6 +163,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   saveTask(): void {
+    const validPositions = this.todos.map(t => t.position).filter(p => !isNaN(p));
+    const maxPosition = validPositions.length > 0
+      ? Math.max(...validPositions)
+      : 0;
+
     this.store.dispatch(createTask({
       task: {
         id: v4(),
@@ -149,7 +176,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         status: TaskStatus.Todo,
         createdAt: new Date().toISOString(),
         dueAt: this.taskDueDate,
-        priority: this.taskPriority
+        priority: this.taskPriority,
+        position: maxPosition + 1024
       }
     }))
 
@@ -177,13 +205,38 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<Task[]>) {
-    if (event.previousContainer.id === event.container.id) return;
-
     const task = event.previousContainer.data[event.previousIndex];
+    const newStatus = this.statusMapping[event.container.id];
 
-    const newStatus = this.statusMapping[event.container.id]
+    // Create a copy of the target data to simulate the move
+    const targetDataCopy = [...event.container.data];
 
-    const updatedTask = {...task, status: newStatus} as Task;
+    if (event.previousContainer === event.container) {
+      moveItemInArray(targetDataCopy, event.previousIndex, event.currentIndex);
+    } else {
+      targetDataCopy.splice(event.currentIndex, 0, task);
+    }
+
+    const movedItemIndex = targetDataCopy.findIndex(t => t.id === task.id);
+    const prevCard = targetDataCopy[movedItemIndex - 1];
+    const nextCard = targetDataCopy[movedItemIndex + 1];
+
+    let newPosition: number;
+    if (!prevCard && !nextCard) {
+      newPosition = 1024;
+    } else if (!prevCard) {
+      newPosition = nextCard.position / 2;
+    } else if (!nextCard) {
+      newPosition = prevCard.position + 1024;
+    } else {
+      newPosition = (prevCard.position + nextCard.position) / 2;
+    }
+
+    const updatedTask = {
+      ...task,
+      status: newStatus,
+      position: newPosition
+    } as Task;
 
     this.store.dispatch(updateTask({task: updatedTask}));
   }

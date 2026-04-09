@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-devider',
@@ -15,8 +15,8 @@ export class AppDeviderComponent {
     const marginClasses = {
       none: 'my-0',
       sm: 'my-1',
-      md: 'my-2',
-      lg: 'my-4'
+      md: 'my-3',
+      lg: 'my-8',
     };
 
     if (this.variant === 'auto') {
@@ -26,9 +26,8 @@ export class AppDeviderComponent {
       `;
     }
 
-    const borderColor = this.variant === 'light'
-      ? 'border-zinc-200'
-      : 'border-zinc-700';
+    const borderColor =
+      this.variant === 'light' ? 'border-zinc-200' : 'border-zinc-700';
 
     return `
       w-full border-0 border-b ${borderColor}

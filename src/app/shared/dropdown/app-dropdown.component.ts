@@ -1,4 +1,11 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface DropdownOption {
@@ -41,11 +48,9 @@ export class DropdownComponent {
   }
 
   getSelectedLabel(): string {
-    if (!this.selectedValue) {
-      return this.placeholder;
-    }
-
-    const selectedOption = this.options.find(option => option.value === this.selectedValue);
+    const selectedOption = this.options.find(
+      (option) => option.value === this.selectedValue
+    );
     return selectedOption ? selectedOption.label : this.placeholder;
   }
 }
