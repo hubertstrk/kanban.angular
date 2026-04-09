@@ -25,6 +25,9 @@ import { TaskTitleComponent } from '@app/shared/task-title-display/app-task-titl
 @Component({
   selector: 'app-task-card',
   standalone: true,
+  host: {
+    'class': 'block'
+  },
   imports: [
     CommonModule,
     ButtonComponent,

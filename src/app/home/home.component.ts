@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {SafeHtml} from '@angular/platform-browser';
-import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList, CdkDropListGroup, moveItemInArray} from "@angular/cdk/drag-drop";
 
 import {getCurrentWebviewWindow} from '@tauri-apps/api/webviewWindow';
 import {Subject, take, takeUntil} from 'rxjs';
@@ -35,7 +35,7 @@ const appWindow = getCurrentWebviewWindow();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDropListGroup, DropdownComponent, DatePickerComponent, MonacoEditorComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, TextInputComponent, TaskCardComponent, SectionHeaderComponent, CdkDropList, CdkDrag, CdkDragPlaceholder, CdkDropListGroup, DropdownComponent, DatePickerComponent, MonacoEditorComponent],
   providers: [IconService],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
