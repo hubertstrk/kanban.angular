@@ -221,6 +221,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const prevCard = targetDataCopy[movedItemIndex - 1];
     const nextCard = targetDataCopy[movedItemIndex + 1];
 
+    // calculate new position
     let newPosition: number;
     if (!prevCard && !nextCard) {
       newPosition = 1024;
